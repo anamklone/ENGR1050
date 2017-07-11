@@ -30,7 +30,7 @@ app.get("/api/charging-session", function(req, res) {
 
 app.post("/api/charging-session", function(req, res) {
     console.log("create new charging session");
-    res.status(200).json();
+    res.status(200).json({"response": "This is a test"});
 })
 
 /*
