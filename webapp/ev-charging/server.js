@@ -1,13 +1,24 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var pg = require('pg');
 
 var app = express();
 app.use(bodyParser.json());
 
-// Initialize the app
-var server = app.listen(process.env.PORT || 8080, function() {
-    var port = server.address().port;
-    console.log("App now running on port", port);
+pg.defaults.ssl = true;
+
+// Connect to the database before starting the application server
+pg.connect(process.env.DATABASE_URL, function(err, client) {
+    if (err) {
+        console.log(err);
+        process.exit(1);
+    }
+
+    // Initialize the app
+    var server = app.listen(process.env.PORT || 8080, function() {
+        var port = server.address().port;
+        console.log("App now running on port", port);
+    });
 });
 
 // REST API DEFINED BELOW
