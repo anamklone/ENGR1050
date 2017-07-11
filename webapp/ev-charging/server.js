@@ -24,7 +24,7 @@ function handleError(res, reason, message, code) {
  */
 app.get("/api/client-instance", function(req, res) {
     console.log("return new client instance url");
-    res.status(200).json({"data": "This is a test"});
+    res.status(200).json({"url": "https://ev-charging.herokuapp.com/qvn10hvg"});
 });
 
 /*
