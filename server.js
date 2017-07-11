@@ -19,32 +19,39 @@ function handleError(res, reason, message, code) {
 }
 
 /*
- * "/api/charging_session"
+ * TEST PAGE
+ */
+app.get("/", function(req, res) {
+    console.log("testing...");
+});
+
+/*
+ * "/api/charging-session"
  *   GET: find all charging sessions
  *   POST: create a new charging session
  */
-app.get("/api/charging_session", function(req, res) {
+app.get("/api/charging-session", function(req, res) {
     console.log("find all charging sessions")
 });
 
-app.post("/api/charging_session", function(req, res) {
+app.post("/api/charging-session", function(req, res) {
     console.log("create new charging session");
 })
 
 /*
- * "/api/charging_session/:id"
+ * "/api/charging-session/:id"
  *   GET: find charging session by id
  *   PUT: update charging session by id
  *   DELETE: delete charging session by id
  */
-app.get("/api/charging_session/:id", function(req, res) {
+app.get("/api/charging-session/:id", function(req, res) {
     console.log("find charging session by id");
 });
 
-app.put("/api/charging_session/:id", function(req, res) {
+app.put("/api/charging-session/:id", function(req, res) {
     console.log("update charging session by id");
 });
 
-app.delete("/api/charging_session/:id", function(req, res) {
+app.delete("/api/charging-session/:id", function(req, res) {
     console.log("delete charging session by id");
 });
