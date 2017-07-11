@@ -19,6 +19,15 @@ function handleError(res, reason, message, code) {
 }
 
 /*
+ * "/api/client-instance"
+ *   GET: find all charging sessions
+ */
+app.get("/api/client-instance", function(req, res) {
+    console.log("return new client instance url");
+    res.status(200).json({"data": "This is a test"});
+});
+
+/*
  * "/api/charging-session"
  *   GET: find all charging sessions
  *   POST: create a new charging session
@@ -30,8 +39,8 @@ app.get("/api/charging-session", function(req, res) {
 
 app.post("/api/charging-session", function(req, res) {
     console.log("create new charging session");
-    res.status(200).json({"response": "This is a test"});
-})
+    res.status(200).json();
+});
 
 /*
  * "/api/charging-session/:id"
