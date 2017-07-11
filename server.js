@@ -14,6 +14,8 @@ pg.connect(process.env.DATABASE_URL, function(err, client) {
         process.exit(1);
     }
 
+    console.log("Database connection ready");
+
     // Initialize the app
     var server = app.listen(process.env.PORT || 8080, function() {
         var port = server.address().port;
