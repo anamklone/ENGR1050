@@ -15,4 +15,4 @@ Useful Links for Development
 - Create remote 'heroku'
     - git remote add heroku https://git.heroku.com/ev-charging.git
 - Push only the heroku app folder to the remote
-    - git subtree push --prefix webapp\ev-charging heroku master
+    - git subtree push --prefix webapp/ev-charging heroku master
