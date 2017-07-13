@@ -2,10 +2,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
+import { ChargingSessionDetailsComponent } from './charging-session/charging-session-details/charging-session-details.component';
+import { ChargingSessionListComponent } from './charging-session/charging-session-list/charging-session-list.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ChargingSessionDetailsComponent,
+    ChargingSessionListComponent
   ],
   imports: [
     BrowserModule
