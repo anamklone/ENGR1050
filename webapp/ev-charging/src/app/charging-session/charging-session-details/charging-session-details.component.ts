@@ -12,6 +12,6 @@ export class ChargingSessionDetailsComponent {
     @Input()
     chargingSession: ChargingSession;
 
-    constructor(private chargingSession: ChargingSession) { }
+    constructor(private chargingSessionService: ChargingSessionService) { }
 
 }
