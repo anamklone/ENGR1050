@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ChargingSession } from '../charging-session';
 import { ChargingSessionService } from '../charging-session.service';
 
@@ -7,10 +7,11 @@ import { ChargingSessionService } from '../charging-session.service';
     templateUrl: './charging-session-details.component.html',
     styleUrls: ['./charging-session-details.component.css']
 })
-export class ChargingSessionDetailsComponent implements OnInit {
+export class ChargingSessionDetailsComponent {
 
     @Input()
     chargingSession: ChargingSession;
 
-    constructor(rivate chargingSession: ChargingSession) { }
+    constructor(private chargingSession: ChargingSession) { }
+
 }

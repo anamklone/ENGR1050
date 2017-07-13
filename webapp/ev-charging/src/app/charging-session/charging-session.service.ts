@@ -36,20 +36,20 @@ export class ChargingSessionService {
     // put("/api/charging-session/:id")
     updateChargingSession(putChargingSession: ChargingSession): Promise<ChargingSession> {
         return this.http.put(this.chargingSessionUrl + '/' + putChargingSession.id, putChargingSession)
-                   .toPromise();
+                   .toPromise()
                    .then(response => response.json() as ChargingSession)
                    .catch(this.handleError);
     }
 
     // delete("/api/charging-session/:id")
     deleteChargingSession(delChargingSessionId: String): Promise<String> {
-        return this.http.delete(this.chargingSessionUrl + '/' + delContactId)
+        return this.http.delete(this.chargingSessionUrl + '/' + delChargingSessionId)
                    .toPromise()
                    .then(response => response.json() as String)
                    .catch(this.handleError);
     }
 
-    private handlerError(error: any) {
+    private handleError(error: any) {
         let errMsg = (error.message) ? error.message :
         error.status ? `${error.status} - ${error.statusText}` : 'Server error';
         console.error(errMsg);  // log to console instead

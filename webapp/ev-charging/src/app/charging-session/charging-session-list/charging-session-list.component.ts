@@ -18,7 +18,7 @@ export class ChargingSessionListComponent implements OnInit {
 
     ngOnInit() {
         this.chargingSessionService
-         .getChargingSessions(0
+         .getChargingSessions()
          .then((chargingSessions: ChargingSession[]) => {
             this.chargingSessions = chargingSessions.map((chargingSession) => {
                 return chargingSession;
