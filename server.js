@@ -5,6 +5,10 @@ var pg = require('pg');
 var app = express();
 app.use(bodyParser.json());
 
+// Create link to Angular build directory
+var distDir = __dirName + "/dist/";
+app.use(express.static(distDir));
+
 pg.defaults.ssl = true;
 
 // Connect to the database before starting the application server
@@ -32,15 +36,6 @@ function handleError(res, reason, message, code) {
 }
 
 /*
- * "/api/client-instance"
- *   GET: find all charging sessions
- */
-app.get("/api/client-instance", function(req, res) {
-    console.log("return new client instance url");
-    res.status(200).json({"url": "https://ev-charging.herokuapp.com/qvn10hvg"});
-});
-
-/*
  * "/api/charging-session"
  *   GET: find all charging sessions
  *   POST: create a new charging session
@@ -52,7 +47,7 @@ app.get("/api/charging-session", function(req, res) {
 
 app.post("/api/charging-session", function(req, res) {
     console.log("create new charging session");
-    res.status(200).json();
+    res.status(200).json({"url": "https://ev-charging.herokuapp.com/qvn10hvg"});
 });
 
 /*
