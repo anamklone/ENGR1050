@@ -6,7 +6,7 @@ var app = express();
 app.use(bodyParser.json());
 
 // Create link to Angular build directory
-var distDir = __dirName + "/dist/";
+var distDir = "src/libs/angular/";
 app.use(express.static(distDir));
 
 pg.defaults.ssl = true;
