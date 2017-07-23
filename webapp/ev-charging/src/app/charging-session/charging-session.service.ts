@@ -26,8 +26,8 @@ export class ChargingSessionService {
     }
 
     // get("/api/charging-session/:id")
-    getChargingSession(): Promise<ChargingSession> {
-        return this.http.get(this.chargingSessionUrl)
+    getChargingSession(getChargingSessionId: String): Promise<ChargingSession> {
+        return this.http.get(this.chargingSessionUrl + '/' + getChargingSessionId)
                    .toPromise()
                    .then(response => response.json() as ChargingSession)
                    .catch(this.handleError);
