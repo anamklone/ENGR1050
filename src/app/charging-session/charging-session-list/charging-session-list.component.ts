@@ -4,7 +4,7 @@ import { ChargingSessionService } from '../charging-session.service';
 import { ChargingSessionDetailsComponent } from '../charging-session-details/charging-session-details.component';
 
 @Component({
-    selector: 'app-charging-session-list',
+    selector: 'charging-session-list',
     templateUrl: './charging-session-list.component.html',
     styleUrls: ['./charging-session-list.component.css'],
     providers: [ChargingSessionService]
