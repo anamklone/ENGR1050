@@ -48,14 +48,14 @@ function handleError(res, reason, message, code) {
  */
 app.get("/api/charging-session", function(req, res) {
     console.log("find all charging sessions");
-    client.query('SELECT * FROM test', (err, results) => {
+    client.query('SELECT * FROM chargingsessions', (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to get charging sessions");
         }
         if (results.rows.length === 0) {
             handleError(res, err.message, "failed to get charging sessions", 404);
         }
-        res.status(200).json(results);
+        res.status(200).json(results.rows);
     });
 });
 
@@ -71,8 +71,16 @@ app.post("/api/charging-session", function(req, res) {
  *   DELETE: delete charging session by id
  */
 app.get("/api/charging-session/:id", function(req, res) {
-    console.log("find charging session by id");
-    res.status(200).json();
+    console.log("find charging session by id (id = " + req.params.id + ")");
+    client.query('SELECT * FROM chargingsessions WHERE id = ' + req.params.id, (err, results) => {
+        if (err) {
+            handleError(res, err.message, "failed to get charging session (id = " + req.params.id + ")");
+        }
+        if (results.rows.length === 0) {
+            handleError(res, err.message, "failed to get charging session (id = " + req.params.id + ")", 404);
+        }
+        res.status(200).json(results.rows);
+    });
 });
 
 app.put("/api/charging-session/:id", function(req, res) {
