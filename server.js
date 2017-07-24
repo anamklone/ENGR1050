@@ -1,6 +1,6 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var pg = require('pg');
+var express = require("express");
+var bodyParser = require("body-parser");
+var pg = require("pg");
 
 var app = express();
 app.use(bodyParser.json());
@@ -30,7 +30,7 @@ client.connect(function(err) {
 
 app.get("/:id", function(req, res) {
     console.log("opening page for charging session (id = " + req.params.id + ")");
-    res.sendfile('./src/index.html');
+    res.sendfile("./src/index.html");
 });
 
 // REST API DEFINED BELOW
@@ -48,7 +48,7 @@ function handleError(res, reason, message, code) {
  */
 app.get("/api/charging-session", function(req, res) {
     console.log("find all charging sessions");
-    client.query('SELECT * FROM chargingsessions', (err, results) => {
+    client.query("SELECT * FROM chargingsessions", (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to get charging sessions");
         }
@@ -72,7 +72,7 @@ app.post("/api/charging-session", function(req, res) {
  */
 app.get("/api/charging-session/:id", function(req, res) {
     console.log("find charging session by id (id = " + req.params.id + ")");
-    client.query('SELECT * FROM chargingsessions WHERE id = '' + req.params.id + ''', (err, results) => {
+    client.query("SELECT * FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to get charging session (id = " + req.params.id + ")");
         }
