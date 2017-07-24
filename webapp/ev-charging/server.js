@@ -47,7 +47,15 @@ function handleError(res, reason, message, code) {
  */
 app.get("/api/charging-session", function(req, res) {
     console.log("find all charging sessions");
-    res.status(200).json();
+    pg.client.query('SELECT * FROM test', function(err, results) {
+        if (err) {
+            handleError(res, err.message, "failed to get charging sessions");
+        }
+        if (results.rows.length === 0) {
+            handleError(res, err.message, "failed to get charging sessions", 404);
+        }
+        res.status(200).json(results);
+    });
 });
 
 app.post("/api/charging-session", function(req, res) {
@@ -75,3 +83,7 @@ app.delete("/api/charging-session/:id", function(req, res) {
     console.log("delete charging session by id");
     res.status(200).json();
 });
+
+generateUniqueId() {
+    return guid().substring(8);
+}
