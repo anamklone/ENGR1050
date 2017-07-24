@@ -5,7 +5,7 @@ import { ChargingSessionService } from '../charging-session/charging-session.ser
 @Component({
     selector: 'app-input',
     templateUrl: './input.component.html',
-    styleUrls: ['./input.component.css']
+    styleUrls: ['./input.component.css'],
     providers: [ChargingSessionService]
 })
 export class InputComponent implements OnInit {
