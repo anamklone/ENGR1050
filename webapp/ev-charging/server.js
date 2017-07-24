@@ -12,9 +12,8 @@ app.use(express.static(distDir));
 pg.defaults.ssl = true;
 
 // Connect to the database before starting the application server
-var pool = new pg.Pool();
 var client;
-pool.connect(function(err, client, done) {
+pg.connect(process.env.DATABASE_URL, function(err, client) {
     if (err) {
         console.log(err);
         process.exit(1);
