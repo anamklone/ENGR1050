@@ -72,7 +72,7 @@ app.post("/api/charging-session", function(req, res) {
  */
 app.get("/api/charging-session/:id", function(req, res) {
     console.log("find charging session by id (id = " + req.params.id + ")");
-    client.query('SELECT * FROM chargingsessions WHERE id = "' + req.params.id + '"', (err, results) => {
+    client.query('SELECT * FROM chargingsessions WHERE id = '' + req.params.id + ''', (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to get charging session (id = " + req.params.id + ")");
         }
