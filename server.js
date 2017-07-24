@@ -12,6 +12,7 @@ app.use(express.static(distDir));
 pg.defaults.ssl = true;
 
 // Connect to the database before starting the application server
+var client;
 pg.connect(process.env.DATABASE_URL, function(err, client) {
     if (err) {
         console.log(err);
@@ -47,7 +48,7 @@ function handleError(res, reason, message, code) {
  */
 app.get("/api/charging-session", function(req, res) {
     console.log("find all charging sessions");
-    client.query('SELECT * FROM test', function(err, results) {
+    client.query('SELECT * FROM test', (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to get charging sessions");
         }
