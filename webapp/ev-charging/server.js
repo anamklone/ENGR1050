@@ -27,6 +27,11 @@ pg.connect(process.env.DATABASE_URL, function(err, client) {
     });
 });
 
+app.get("/:id", function(req, res) {
+    console.log("opening page for charging session (id = " + req.params.id + ")");
+    res.sendfile('./src/index.html');
+});
+
 // REST API DEFINED BELOW
 
 // Generic error handler used by all endpoints
@@ -34,11 +39,6 @@ function handleError(res, reason, message, code) {
     console.log("ERROR: " + reason);
     res.status(code || 500).json({"error": message});
 }
-
-app.get("/:id", function(req, res) {
-    console.log("opening page for charging session (id = " + req.params.id + ")");
-    res.sendfile('./index.html');
-});
 
 /*
  * "/api/charging-session"
