@@ -48,7 +48,7 @@ function handleError(res, reason, message, code) {
  */
 app.get("/api/charging-session", function(req, res) {
     console.log("find all charging sessions");
-    client.query('SELECT NOW()', (err, results) => {
+    client.query('SELECT * FROM test', (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to get charging sessions");
         }
