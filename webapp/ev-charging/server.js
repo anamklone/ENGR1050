@@ -35,6 +35,11 @@ function handleError(res, reason, message, code) {
     res.status(code || 500).json({"error": message});
 }
 
+app.get("/:id", function(req, res) {
+    console.log("opening page for charging session (id = " + req.params.id + ")");
+    res.sendfile('./index.html');
+});
+
 /*
  * "/api/charging-session"
  *   GET: find all charging sessions
