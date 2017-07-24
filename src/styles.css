@@ -17,8 +17,7 @@ h2 {
     text-align: center;
     background-color: darkgreen;
     color: lawngreen;
-
-    //border: 25px solid green;
+    border: 25px solid green;
     padding: 25px;
     margin: 25px;
 }
@@ -27,8 +26,7 @@ h3 {
 	text-align: center;
 	background-color: darkgreen;
 	color: lawngreen;
-
-	//border: 25px solid green;
+    border: 25px solid green;
 	padding: 25px;
 	margin: 25px;
 }
@@ -37,8 +35,6 @@ label {
 	text-align: center;
 	background-color: darkgreen;
 	color: lawngreen;
-	/*width: 40px;*/
-	/*border: 25px solid green;*/
 	padding: 40px;
 	margin: 25px;
     font-size: 20px;
@@ -46,7 +42,6 @@ label {
 
 button {
 	position: relative;
-	/*right: 0px;*/
 	text-align: center;
     background-color: black; /* Green */
     border: none;
