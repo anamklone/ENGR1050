@@ -84,6 +84,8 @@ app.delete("/api/charging-session/:id", function(req, res) {
     res.status(200).json();
 });
 
+/*
 generateUniqueId() {
     return guid().substring(8);
 }
+*/
