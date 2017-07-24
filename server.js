@@ -18,12 +18,12 @@ pg.connect(process.env.DATABASE_URL, function(err, client) {
         process.exit(1);
     }
 
-    console.log("Database connection ready");
+    console.log("database connection ready");
 
     // Initialize the app
     var server = app.listen(process.env.PORT || 8080, function() {
         var port = server.address().port;
-        console.log("App now running on port", port);
+        console.log("app now running on port " + port);
     });
 });
 
@@ -47,7 +47,7 @@ function handleError(res, reason, message, code) {
  */
 app.get("/api/charging-session", function(req, res) {
     console.log("find all charging sessions");
-    pg.client.query('SELECT * FROM test', function(err, results) {
+    client.query('SELECT * FROM test', function(err, results) {
         if (err) {
             handleError(res, err.message, "failed to get charging sessions");
         }
