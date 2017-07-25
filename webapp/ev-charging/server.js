@@ -123,11 +123,24 @@ app.get("/api/charging-session/:id", function(req, res) {
 
 app.put("/api/charging-session/:id", function(req, res) {
     console.log("update charging session by id (id = " + req.params.id + ")");
+
     if (!authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to update charging session (id = " + req.params.id + ")", 400);
     }
-    /*
-    client.query("SELECT * FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
+
+    // Check that all required fields have values
+    //if (!req.body.???) {
+    //    handleError(res, "invalid input", "must provide ???", 400);
+    //}
+
+    var dataToUpdate = "";
+    for (var key in req.body) {
+        if (req.body.hasOwnProperty(key)) {
+            dataToUpdate += key + " = " + req.body[key] + ", ";
+        }
+    }
+
+    client.query("UPDATE chargingsessions SET " + dataToUpdate + " WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to update charging session (id = " + req.params.id + ")");
         }
@@ -136,7 +149,6 @@ app.put("/api/charging-session/:id", function(req, res) {
         }
         res.status(200).json(results.rows);
     });
-    */
 });
 
 app.delete("/api/charging-session/:id", function(req, res) {
@@ -151,7 +163,7 @@ app.delete("/api/charging-session/:id", function(req, res) {
         if (results.rows.length === 0) {
             handleError(res, "charging session not found", "failed to delete charging session (id = " + req.params.id + ")", 404);
         }
-        res.status(201).json(results.rows);
+        res.status(200).json(results.rows);
     });
 });
 
