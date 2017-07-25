@@ -4,12 +4,12 @@
 <br>
 <br>
 
-<div>
+<div *ngIf="chargingSession">
 
-    <input type="number" name="hours" min="0" max="12">
+    <input type="number" name="hours" [(ngModel)]="chargingSession.estimatedTime.hours" min="0" max="12">
     <label>hr</label>
 
-    <input type="number" name="minutes" min="0" max="59">
+    <input type="number" name="minutes" [(ngModel)]="chargingSession.estimatedTime.minutes" min="0" max="59">
     <label>min</label>
 
     <br>
@@ -18,6 +18,6 @@
     <br>
     <br>
 
-    <button (click)="updateChargingSession()">Next -></button>
+    <button (click)="updateChargingSession(chargingSession)">Next -></button>
 
 </div>
