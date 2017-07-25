@@ -136,9 +136,12 @@ app.put("/api/charging-session/:id", function(req, res) {
     var dataToUpdate = "";
     for (var key in req.body) {
         if (req.body.hasOwnProperty(key)) {
-            dataToUpdate += key + " = " + req.body[key] + ", ";
+            dataToUpdate += key + " = '" + req.body[key] + "', ";
         }
     }
+
+    console.log(dataToUpdate);
+
     dataToUpdate.substring(0, dataToUpdate.length - 3);
 
     console.log(dataToUpdate);
