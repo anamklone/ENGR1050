@@ -133,9 +133,6 @@ app.put("/api/charging-session/:id", function(req, res) {
     //    handleError(res, "invalid input", "must provide ???", 400);
     //}
 
-    console.log(req.body);
-    console.log(req.params);
-
     var dataToUpdate = "";
     for (var key in req.body) {
         console.log(key + " = " + req.body[key]);
@@ -143,12 +140,7 @@ app.put("/api/charging-session/:id", function(req, res) {
             dataToUpdate += key + " = '" + req.body[key] + "', ";
         }
     }
-
-    console.log(dataToUpdate);
-
-    dataToUpdate.substring(0, dataToUpdate.length - 3);
-
-    console.log(dataToUpdate);
+    dataToUpdate = dataToUpdate.substring(0, dataToUpdate.length - 2);
 
     client.query("UPDATE chargingsessions SET " + dataToUpdate + " WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
         if (err) {
@@ -162,6 +154,7 @@ app.put("/api/charging-session/:id", function(req, res) {
         */
         res.status(200).json(results);
     });
+    sendUpdateToChargers();
 });
 
 app.delete("/api/charging-session/:id", function(req, res) {
@@ -190,4 +183,8 @@ function authenticate(key) {
 // Implementation derived from https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
 function generateUniqueId() {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+}
+
+function sendUpdateToChargers() {
+    console.log("sending update to ev chargers");
 }
