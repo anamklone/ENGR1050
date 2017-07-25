@@ -64,7 +64,7 @@ app.get("/api/charging-session", function(req, res) {
 
 app.post("/api/charging-session", function(req, res) {
     console.log("create new charging session");
-    console.log(req);
+    console.log(req.get("Authorization"));
 
     // Check that all required fields have values
     //if (!req.body.???) {
