@@ -51,6 +51,9 @@ function handleError(res, reason, message, code) {
  */
 app.get("/api/charging-session", function(req, res) {
     console.log("find all charging sessions");
+    if (!authenticate(req.get("Authorization").toString().slice(6))) {
+        handleError(res, "authentication failed", "failed to get charging sessions", 400);
+    }
     client.query("SELECT * FROM chargingsessions", (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to get charging sessions");
@@ -105,6 +108,9 @@ app.post("/api/charging-session", function(req, res) {
  */
 app.get("/api/charging-session/:id", function(req, res) {
     console.log("find charging session by id (id = " + req.params.id + ")");
+    if (!authenticate(req.get("Authorization").toString().slice(6))) {
+        handleError(res, "authentication failed", "failed to get charging session (id = " req.params.id + ")", 400);
+    }
     client.query("SELECT * FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to get charging session (id = " + req.params.id + ")");
@@ -117,7 +123,10 @@ app.get("/api/charging-session/:id", function(req, res) {
 });
 
 app.put("/api/charging-session/:id", function(req, res) {
-    console.log("update charging session by id");
+    console.log("update charging session by id (id = " + req.params.id + ")");
+    if (!authenticate(req.get("Authorization").toString().slice(6))) {
+        handleError(res, "authentication failed", "failed to update charging session (id = " + req.params.id + ")", 400);
+    }
     /*
     client.query("SELECT * FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
         if (err) {
@@ -133,6 +142,10 @@ app.put("/api/charging-session/:id", function(req, res) {
 
 app.delete("/api/charging-session/:id", function(req, res) {
     console.log("delete charging session by id");
+    if (!authenticate(req.get("Authorization").toString().slice(6))) {
+        handleError(res, "authentication failed", "failed to delete charging session (id = " + req.params.id + ")", 400);
+    }
+    /*
     client.query("SELECT * FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to delete charging session (id = " + req.params.id + ")");
@@ -142,6 +155,7 @@ app.delete("/api/charging-session/:id", function(req, res) {
         }
         res.status(200).json(results.rows);
     });
+    */
 });
 
 function authenticate(key) {
