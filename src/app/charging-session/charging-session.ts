@@ -1,8 +1,11 @@
 export class ChargingSession {
     id: string;
-    valid: boolean;
+    active: boolean;
+    pinId: number;
     estimatedTime: {
         hours: number;
         minutes: number;
     }
+    startTime: string;
+    maxChargeRate: number;
 }
