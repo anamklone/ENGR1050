@@ -134,6 +134,7 @@ app.put("/api/charging-session/:id", function(req, res) {
     //}
 
     console.log(req.body);
+    console.log(req.params);
 
     var dataToUpdate = "";
     for (var key in req.body) {
