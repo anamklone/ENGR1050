@@ -20,6 +20,6 @@ export class InputComponent implements OnInit {
 
     updateChargingSession() {
         console.log("updating charging session");
-        this.chargingSessionService.updateChargingSession(chargingSession);
+        this.chargingSessionService.updateChargingSession(this.chargingSession);
     }
 }
