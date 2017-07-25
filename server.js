@@ -67,12 +67,12 @@ app.post("/api/charging-session", function(req, res) {
     //    handleError(res, "invalid input", "must provide ???", 400);
     //}
 
-    var columns = "(";
-    var values = "(";
+    var columns = "(id";
+    var values = "('" + generateUniqueId() + "'";
     for (var key in req.body) {
         if (req.body.hasOwnProperty(key)) {
-            columns += key + ", ";
-            values += "'" + req.body[key] + "', ";
+            columns += ", " + key;
+            values += ", '" + req.body[key] + "'";
         }
     }
     columns += ")";
@@ -135,8 +135,7 @@ app.delete("/api/charging-session/:id", function(req, res) {
     });
 });
 
-/*
+// Implementation derived from https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
 generateUniqueId() {
-    return guid().substring(8);
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 }
-*/
