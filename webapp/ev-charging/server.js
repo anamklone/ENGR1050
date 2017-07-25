@@ -153,10 +153,13 @@ app.put("/api/charging-session/:id", function(req, res) {
         if (err) {
             handleError(res, err.message, "failed to update charging session (id = " + req.params.id + ")");
         }
+        /*
         if (results.rows.length === 0) {
             handleError(res, "charging session not found", "failed to update charging session (id = " + req.params.id + ")", 404);
         }
         res.status(200).json(results.rows);
+        */
+        res.status(200).json(results);
     });
 });
 
