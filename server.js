@@ -61,7 +61,33 @@ app.get("/api/charging-session", function(req, res) {
 
 app.post("/api/charging-session", function(req, res) {
     console.log("create new charging session");
-    res.status(200).json({"url": "https://ev-charging.herokuapp.com/qvn10hvg"});
+
+    // Check that all required fields have values
+    //if (!req.body.???) {
+    //    handleError(res, "invalid input", "must provide ???", 400);
+    //}
+
+    var columns = "(";
+    var values = "(";
+    for (var key in req.body) {
+        if (req.body.hasOwnProperty(key)) {
+            columns += key + ", ";
+            values += "'" + req.body[key] + "', ";
+        }
+    }
+    columns += ")";
+    values += ")";
+
+    client.query("INSERT INTO chargingsessions " + columns + " VALUES " + values, (err, results) => {
+        if (err) {
+            handleError(res, err.message, "failed to create new charging session");
+        }
+        //if (results.rows.length === 0) {
+        //    handleError(res, err.message, "failed to create new charging session", 404);
+        //}
+        res.status(200).json(results);
+        //res.status(200).json({"url": "https://ev-charging.herokuapp.com/qvn10hvg"});
+    });
 });
 
 /*
@@ -85,12 +111,28 @@ app.get("/api/charging-session/:id", function(req, res) {
 
 app.put("/api/charging-session/:id", function(req, res) {
     console.log("update charging session by id");
-    res.status(200).json();
+    client.query("SELECT * FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
+        if (err) {
+            handleError(res, err.message, "failed to update charging session (id = " + req.params.id + ")");
+        }
+        if (results.rows.length === 0) {
+            handleError(res, err.message, "failed to update charging session (id = " + req.params.id + ")", 404);
+        }
+        res.status(200).json(results.rows);
+    });
 });
 
 app.delete("/api/charging-session/:id", function(req, res) {
     console.log("delete charging session by id");
-    res.status(200).json();
+    client.query("SELECT * FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
+        if (err) {
+            handleError(res, err.message, "failed to delete charging session (id = " + req.params.id + ")");
+        }
+        if (results.rows.length === 0) {
+            handleError(res, err.message, "failed to delete charging session (id = " + req.params.id + ")", 404);
+        }
+        res.status(200).json(results.rows);
+    });
 });
 
 /*
