@@ -139,7 +139,9 @@ app.put("/api/charging-session/:id", function(req, res) {
             dataToUpdate += key + " = " + req.body[key] + ", ";
         }
     }
-    dataToUpdate.substring(0, dataToUpdate.length - 2);
+    dataToUpdate.substring(0, dataToUpdate.length - 3);
+
+    console.log(dataToUpdate);
 
     client.query("UPDATE chargingsessions SET " + dataToUpdate + " WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
         if (err) {
