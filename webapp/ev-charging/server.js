@@ -66,6 +66,10 @@ app.post("/api/charging-session", function(req, res) {
     console.log("create new charging session");
     console.log(req.get("Authorization"));
 
+    if (!authenticate(req.get("Authorization").slice(6))) {
+        handleError(res, "authentication failed", "failed to create new charging session", 400);
+    }
+
     // Check that all required fields have values
     //if (!req.body.???) {
     //    handleError(res, "invalid input", "must provide ???", 400);
@@ -140,8 +144,11 @@ app.delete("/api/charging-session/:id", function(req, res) {
     });
 });
 
-function authenticate() {
-    return true;
+function authenticate(key) {
+    if (window.btoa(username + ":" + password) === key) {
+        return true;
+    }
+    return false;
 }
 
 // Implementation derived from https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
