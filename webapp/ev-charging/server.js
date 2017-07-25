@@ -148,13 +148,10 @@ app.delete("/api/charging-session/:id", function(req, res) {
         if (err) {
             handleError(res, err.message, "failed to delete charging session (id = " + req.params.id + ")");
         }
-        /*
         if (results.rows.length === 0) {
             handleError(res, "charging session not found", "failed to delete charging session (id = " + req.params.id + ")", 404);
         }
-        res.status(200).json(results.rows);
-        */
-        res.status(201).json(results);
+        res.status(201).json(results.rows);
     });
 });
 
