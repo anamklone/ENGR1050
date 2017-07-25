@@ -59,7 +59,7 @@ app.get("/api/charging-session", function(req, res) {
             handleError(res, err.message, "failed to get charging sessions");
         }
         if (results.rows.length === 0) {
-            handleError(res, err.message, "failed to get charging sessions", 404);
+            handleError(res, "no charging sessions found", "failed to get charging sessions", 404);
         }
         res.status(200).json(results.rows);
     });
@@ -67,7 +67,6 @@ app.get("/api/charging-session", function(req, res) {
 
 app.post("/api/charging-session", function(req, res) {
     console.log("create new charging session");
-    console.log(req.get("Authorization"));
 
     if (!authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to create new charging session", 400);
@@ -94,7 +93,7 @@ app.post("/api/charging-session", function(req, res) {
             handleError(res, err.message, "failed to create new charging session");
         }
         if (results.rows.length === 0) {
-            handleError(res, err.message, "failed to create new charging session", 404);
+            handleError(res, "charging session not created", "failed to create new charging session", 404);
         }
         res.status(200).json({"url": "https://ev-charging.herokuapp.com/" + results.rows[0].id});
     });
@@ -116,7 +115,7 @@ app.get("/api/charging-session/:id", function(req, res) {
             handleError(res, err.message, "failed to get charging session (id = " + req.params.id + ")");
         }
         if (results.rows.length === 0) {
-            handleError(res, err.message, "failed to get charging session (id = " + req.params.id + ")", 404);
+            handleError(res, "charging session not found", "failed to get charging session (id = " + req.params.id + ")", 404);
         }
         res.status(200).json(results.rows);
     });
@@ -133,7 +132,7 @@ app.put("/api/charging-session/:id", function(req, res) {
             handleError(res, err.message, "failed to update charging session (id = " + req.params.id + ")");
         }
         if (results.rows.length === 0) {
-            handleError(res, err.message, "failed to update charging session (id = " + req.params.id + ")", 404);
+            handleError(res, "charging session not found", "failed to update charging session (id = " + req.params.id + ")", 404);
         }
         res.status(200).json(results.rows);
     });
@@ -150,7 +149,7 @@ app.delete("/api/charging-session/:id", function(req, res) {
             handleError(res, err.message, "failed to delete charging session (id = " + req.params.id + ")");
         }
         if (results.rows.length === 0) {
-            handleError(res, err.message, "failed to delete charging session (id = " + req.params.id + ")", 404);
+            handleError(res, "charging session not found", "failed to delete charging session (id = " + req.params.id + ")", 404);
         }
         res.status(200).json(results.rows);
     });
