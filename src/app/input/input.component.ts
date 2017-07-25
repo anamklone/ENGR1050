@@ -10,6 +10,9 @@ import { ChargingSessionService } from '../charging-session/charging-session.ser
 })
 export class InputComponent implements OnInit {
 
+    @Input()
+    chargingSession: ChargingSession;
+
     constructor(private chargingSessionService: ChargingSessionService) { }
 
     ngOnInit() {
@@ -18,5 +21,6 @@ export class InputComponent implements OnInit {
 
     updateChargingSession() {
         console.log("updating charging session");
+        this.chargingSessionService.updateChargingSession();
     }
 }
