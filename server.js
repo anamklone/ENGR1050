@@ -66,7 +66,7 @@ app.post("/api/charging-session", function(req, res) {
     console.log("create new charging session");
     console.log(req.get("Authorization"));
 
-    if (!authenticate(req.get("Authorization").slice(6))) {
+    if (!authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to create new charging session", 400);
     }
 
