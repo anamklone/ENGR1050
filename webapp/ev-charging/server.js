@@ -109,7 +109,7 @@ app.post("/api/charging-session", function(req, res) {
 app.get("/api/charging-session/:id", function(req, res) {
     console.log("find charging session by id (id = " + req.params.id + ")");
     if (!authenticate(req.get("Authorization").toString().slice(6))) {
-        handleError(res, "authentication failed", "failed to get charging session (id = " req.params.id + ")", 400);
+        handleError(res, "authentication failed", "failed to get charging session (id = " + req.params.id + ")", 400);
     }
     client.query("SELECT * FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
         if (err) {
