@@ -82,11 +82,10 @@ app.post("/api/charging-session", function(req, res) {
         if (err) {
             handleError(res, err.message, "failed to create new charging session");
         }
-        //if (results.rows.length === 0) {
-        //    handleError(res, err.message, "failed to create new charging session", 404);
-        //}
-        res.status(200).json(results);
-        //res.status(200).json({"url": "https://ev-charging.herokuapp.com/qvn10hvg"});
+        if (results.rows.length === 0) {
+            handleError(res, err.message, "failed to create new charging session", 404);
+        }
+        res.status(200).json({"url": "https://ev-charging.herokuapp.com/" + results.rows[0].id});
     });
 });
 
