@@ -1,3 +1,6 @@
+const username = "particle-electron";
+const password = "engr1050";
+
 var express = require("express");
 var bodyParser = require("body-parser");
 var pg = require("pg");
@@ -61,6 +64,7 @@ app.get("/api/charging-session", function(req, res) {
 
 app.post("/api/charging-session", function(req, res) {
     console.log("create new charging session");
+    console.log(req);
 
     // Check that all required fields have values
     //if (!req.body.???) {
@@ -110,6 +114,7 @@ app.get("/api/charging-session/:id", function(req, res) {
 
 app.put("/api/charging-session/:id", function(req, res) {
     console.log("update charging session by id");
+    /*
     client.query("SELECT * FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to update charging session (id = " + req.params.id + ")");
@@ -119,6 +124,7 @@ app.put("/api/charging-session/:id", function(req, res) {
         }
         res.status(200).json(results.rows);
     });
+    */
 });
 
 app.delete("/api/charging-session/:id", function(req, res) {
@@ -133,6 +139,10 @@ app.delete("/api/charging-session/:id", function(req, res) {
         res.status(200).json(results.rows);
     });
 });
+
+function authenticate() {
+    return true;
+}
 
 // Implementation derived from https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
 function generateUniqueId() {
