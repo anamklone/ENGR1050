@@ -35,7 +35,7 @@ client.connect(function(err) {
 
 app.get("/:id", function(req, res) {
     console.log("opening page for charging session (id = " + req.params.id + ")");
-    res.sendFile(path.join(__dirname + "/src/index.html");
+    res.sendFile(path.join(__dirname + "/src/index.html"));
 });
 
 // REST API DEFINED BELOW
