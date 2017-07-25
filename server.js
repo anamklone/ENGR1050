@@ -78,7 +78,7 @@ app.post("/api/charging-session", function(req, res) {
     columns += ")";
     values += ")";
 
-    client.query("INSERT INTO chargingsessions " + columns + " VALUES " + values, (err, results) => {
+    client.query("INSERT INTO chargingsessions " + columns + " VALUES " + values + " RETURNING id", (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to create new charging session");
         }
