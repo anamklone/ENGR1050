@@ -144,14 +144,17 @@ app.delete("/api/charging-session/:id", function(req, res) {
     if (!authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to delete charging session (id = " + req.params.id + ")", 400);
     }
-    client.query("DELETE FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
+    client.query("DELETE FROM chargingsessions WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to delete charging session (id = " + req.params.id + ")");
         }
+        /*
         if (results.rows.length === 0) {
             handleError(res, "charging session not found", "failed to delete charging session (id = " + req.params.id + ")", 404);
         }
         res.status(200).json(results.rows);
+        */
+        res.status(201).json(results);
     });
 });
 
