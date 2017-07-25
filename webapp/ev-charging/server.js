@@ -136,6 +136,6 @@ app.delete("/api/charging-session/:id", function(req, res) {
 });
 
 // Implementation derived from https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-generateUniqueId() {
+function generateUniqueId() {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 }
