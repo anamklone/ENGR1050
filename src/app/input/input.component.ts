@@ -16,7 +16,7 @@ export class InputComponent implements OnInit {
     constructor(private chargingSessionService: ChargingSessionService) { }
 
     ngOnInit() {
-
+        // Somehow get chargingSession object from database based on /:id????????
     }
 
     updateChargingSession() {
