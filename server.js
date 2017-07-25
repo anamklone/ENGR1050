@@ -145,7 +145,7 @@ app.delete("/api/charging-session/:id", function(req, res) {
 });
 
 function authenticate(key) {
-    if (window.btoa(username + ":" + password) === key) {
+    if (Buffer.from(username + ":" + password).toString("base64") === key) {
         return true;
     }
     return false;
