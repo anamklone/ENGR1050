@@ -133,6 +133,9 @@ app.put("/api/charging-session/:id", function(req, res) {
     //    handleError(res, "invalid input", "must provide ???", 400);
     //}
 
+    console.log(req);
+    console.log(req.body);
+
     var dataToUpdate = "";
     for (var key in req.body) {
         if (req.body.hasOwnProperty(key)) {
