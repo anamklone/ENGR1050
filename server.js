@@ -8,6 +8,8 @@ var pg = require("pg");
 var app = express();
 app.use(bodyParser.json());
 
+var path = require("path");
+
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/";
 app.use(express.static(distDir));
@@ -33,7 +35,7 @@ client.connect(function(err) {
 
 app.get("/:id", function(req, res) {
     console.log("opening page for charging session (id = " + req.params.id + ")");
-    res.sendfile("./src/index.html");
+    res.sendFile(path.join(__dirname + "/src/index.html");
 });
 
 // REST API DEFINED BELOW
