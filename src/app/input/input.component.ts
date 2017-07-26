@@ -11,15 +11,13 @@ import { ChargingSessionService } from '../charging-session/charging-session.ser
 export class InputComponent implements OnInit {
 
     chargingSession: ChargingSession;
-    id: String;
 
     constructor(private chargingSessionService: ChargingSessionService) { }
 
     ngOnInit() {
         // Somehow get chargingSession object from database based on /:id????????
-        id = "1234";
-        console.log("get charging session by id (id = " + id + ")");
-        this.chargingSession = this.chargingSessionService.getChargingSession(id);
+        //console.log("get charging session by id (id = " + id + ")");
+        this.chargingSession = this.chargingSessionService.getChargingSession("1234");
     }
 
     updateChargingSession() {
