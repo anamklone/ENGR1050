@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChargingSession } from '../charging-session/charging-session';
 import { ChargingSessionService } from '../charging-session/charging-session.service';
+import 'rxjs/Rx';
 
 @Component({
     selector: 'app-input',
