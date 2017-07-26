@@ -11,6 +11,7 @@ import { ChargingSessionService } from '../charging-session/charging-session.ser
 export class InputComponent implements OnInit {
 
     chargingSession: ChargingSession;
+    id: String;
 
     constructor(private chargingSessionService: ChargingSessionService) { }
 
