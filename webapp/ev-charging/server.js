@@ -32,6 +32,7 @@ client.connect(function(err) {
 });
 
 app.get("/:id", function(req, res) {
+    // Get to see if id exists in database
     console.log("opening page for charging session (id = " + req.params.id + ")");
     res.sendFile("./src/index.html");
 });
