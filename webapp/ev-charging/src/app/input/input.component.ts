@@ -18,13 +18,13 @@ export class InputComponent implements OnInit {
     ngOnInit() {
         // Somehow get chargingSession object from database based on /:id????????
         //console.log("get charging session by id (id = " + id + ")");
-        this.chargingSessionService
-            .getChargingSession("1234")
-            .then((chargingSession: ChargingSession) => {
-                this.chargingSession = chargingSession.map((chargingSession) => {
-                    return chargingSession;
-                });
-            });
+        //this.chargingSessionService
+        //    .getChargingSession("1234")
+        //    .then((chargingSession: ChargingSession) => {
+        //        this.chargingSession = chargingSession.map((chargingSession) => {
+        //            return chargingSession;
+        //        });
+        //    });
     }
 
     updateChargingSession() {
