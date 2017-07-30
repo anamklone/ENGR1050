@@ -136,6 +136,7 @@ app.post("/api/charging-session/:id", function(req, res) {
     //    handleError(res, "invalid input", "must provide ???", 400);
     //}
 
+    /*
     var dataToUpdate = "";
     for (var key in req.body) {
         console.log(key + " = " + req.body[key]);
@@ -144,6 +145,9 @@ app.post("/api/charging-session/:id", function(req, res) {
         }
     }
     dataToUpdate = dataToUpdate.substring(0, dataToUpdate.length - 2);
+    */
+
+    var dataToUpdate = "estimatedTime.hours = '" + req.body.estimatedTime.hours + "', estimatedTime.minutes = '" + req.body.estimatedTime.minutes + "'";
 
     console.log("dataToUpdate = " + dataToUpdate);
 
