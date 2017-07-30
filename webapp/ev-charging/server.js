@@ -193,13 +193,26 @@ function generateUniqueId() {
 function sendUpdateToChargers() {
     console.log("sending update to ev chargers");
 
-    var xhr = new XMLHttpRequest();
-    //xhr.open("POST", "https://api.particle.io/v1/devices/230055001951353338363036/ev-update", true);
-    xhr.open("POST", "https://requestb.in/q01bmgq0", true);
-    xhr.setRequestHeader("Authorization", "Bearer 5bd46a6f30e814a8faf8df960b5d6154be7e4859");
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.onload = function () {
-        console.log(this.responseText);
+    var request = require("request");
+
+    // Set the headers
+    var headers = {
+        "Authorization": "Bearer 5bd46a6f30e814a8faf8df960b5d6154be7e4859",
+        "Content-Type": "application/x-www-form-urlencoded"
     }
-    xhr.send("data=0,0,0,0,0,0,0,0");
+
+    // Configure the request
+    var options = {
+        url: "https://requestb.in/q01bmgq0", // "https://api.particle.io/v1/devices/230055001951353338363036/ev-update"
+        method: "POST",
+        headers: headers,
+        form: {"data": "0,0,0,0,0,0,0,0"}
+    }
+
+    // Start the request
+    request(options, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log(body);
+        }
+    });
 }
