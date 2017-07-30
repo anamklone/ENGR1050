@@ -145,14 +145,14 @@ app.post("/api/charging-session/:id", function(req, res) {
     }
     dataToUpdate = dataToUpdate.substring(0, dataToUpdate.length - 2);
 
-    console.log(dataToUpdate);
+    console.log("dataToUpdate = " + dataToUpdate);
 
     client.query("UPDATE chargingsessions SET " + dataToUpdate + " WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to update charging session (id = " + req.params.id + ")");
         }
 
-        console.log(results);
+        console.log("results = " + results);
 
         if (results.rows.length === 0) {
             handleError(res, "charging session not found", "failed to update charging session (id = " + req.params.id + ")", 404);
@@ -192,4 +192,14 @@ function generateUniqueId() {
 
 function sendUpdateToChargers() {
     console.log("sending update to ev chargers");
+
+    var xhr = new XMLHttpRequest();
+    //xhr.open("POST", "https://api.particle.io/v1/devices/230055001951353338363036/ev-update", true);
+    xhr.open("POST", "https://requestb.in/q01bmgq0", true);
+    xhr.setRequestHeader("Authorization", "Bearer 5bd46a6f30e814a8faf8df960b5d6154be7e4859");
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onload = function () {
+        console.log(this.responseText);
+    }
+    xhr.send("data=0,0,0,0,0,0,0,0");
 }
