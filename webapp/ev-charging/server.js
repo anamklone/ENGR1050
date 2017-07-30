@@ -125,9 +125,11 @@ app.get("/api/charging-session/:id", function(req, res) {
 app.put("/api/charging-session/:id", function(req, res) {
     console.log("update charging session by id (id = " + req.params.id + ")");
 
+    /*
     if (!authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to update charging session (id = " + req.params.id + ")", 400);
     }
+    */
 
     // Check that all required fields have values
     //if (!req.body.???) {
