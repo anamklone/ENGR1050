@@ -55,6 +55,6 @@ button {
     cursor: pointer;
 }
 
-.status {
+#status {
     display: none;
 }
