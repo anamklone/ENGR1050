@@ -54,13 +54,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
     $("#submit").click(function() {
-        var id = "";
+        var id = "1234";
         var hours = $("input[name=hours]").val();
         var minutes = $("input[name=minutes]").val();
         console.log(hours);
         console.log(minutes);
 
-        $.post("https://ev-charging.herokuapp.com/" + id,
+        $.post("https://ev-charging.herokuapp.com/api/charging-session/" + id,
         {
             estimatedTime: {
                 hours: hours,
