@@ -145,10 +145,15 @@ app.post("/api/charging-session/:id", function(req, res) {
     }
     dataToUpdate = dataToUpdate.substring(0, dataToUpdate.length - 2);
 
+    console.log(dataToUpdate);
+
     client.query("UPDATE chargingsessions SET " + dataToUpdate + " WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
         if (err) {
             handleError(res, err.message, "failed to update charging session (id = " + req.params.id + ")");
         }
+
+        console.log(results);
+
         if (results.rows.length === 0) {
             handleError(res, "charging session not found", "failed to update charging session (id = " + req.params.id + ")", 404);
         }
