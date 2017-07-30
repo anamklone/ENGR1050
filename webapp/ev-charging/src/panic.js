@@ -1,4 +1,4 @@
-$(".submit").click(function() {
+$("#submit").click(function() {
     var id = "1234";
     var hours = $("input[name=hours]").val();
     var minutes = $("input[name=minutes]").val();
@@ -14,5 +14,8 @@ $(".submit").click(function() {
     },
     function(data, status) {
         alert("Data: " + data + "\nStatus: " + status);
+
+        $("#input").css("display", "none");
+        $("#status").css("display", "block");
     });
 });
