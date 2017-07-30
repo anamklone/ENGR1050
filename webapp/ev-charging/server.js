@@ -103,7 +103,7 @@ app.post("/api/charging-session", function(req, res) {
 /*
  * "/api/charging-session/:id"
  *   GET: find charging session by id
- *   PUT: update charging session by id
+ *   POST: update charging session by id
  *   DELETE: delete charging session by id
  */
 app.get("/api/charging-session/:id", function(req, res) {
@@ -122,7 +122,7 @@ app.get("/api/charging-session/:id", function(req, res) {
     });
 });
 
-app.put("/api/charging-session/:id", function(req, res) {
+app.post("/api/charging-session/:id", function(req, res) {
     console.log("update charging session by id (id = " + req.params.id + ")");
 
     /*
