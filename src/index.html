@@ -63,8 +63,8 @@
         $.post("https://ev-charging.herokuapp.com/api/charging-session/" + id,
         {
             estimatedTime: {
-                hours: hours,
-                minutes: minutes
+                hours: $("input[name=hours]").val(),
+                minutes: $("input[name=minutes]").val()
             }
         },
         function(data, status) {
