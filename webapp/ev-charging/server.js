@@ -82,7 +82,6 @@ app.post("/api/charging-session", function(req, res) {
 
     var maxChargeRates = req.body.data.split(",");
     var response = [];
-    int i;
     for (i = 0; i < data.length(); i++) {
         console.log(maxChargeRates[i]);
 
