@@ -81,7 +81,7 @@ app.post("/api/charging-session", function(req, res) {
     }
 
     var maxChargeRates = req.body.data.split(",");
-    var response[8];
+    var response = [];
     int i;
     for (i = 0; i < data.length(); i++) {
         console.log(maxChargeRates[i]);
@@ -102,13 +102,15 @@ app.post("/api/charging-session", function(req, res) {
                         if (results.rows.length === 0) {
                             handleError(res, "charging session not created", "failed to create new charging session", 404);
                         }
-                        response[i] = "https://ev-charging.herokuapp.com/" + results.rows[0].id;
+                        //response[i] = "https://ev-charging.herokuapp.com/" + results.rows[0].id;
+                        response.push("https://ev-charging.herokuapp.com/" + results.rows[0].id);
                     });
                 }
             }
         }
     }
-    res.status(200).json({1: response[0], 2: response[1], 3: response[2], 4: response[3], 5: response[4], 6: response[5], 7: response[6], 8: response[7]});
+    //res.status(200).json({1: response[0], 2: response[1], 3: response[2], 4: response[3], 5: response[4], 6: response[5], 7: response[6], 8: response[7]});
+    res.status(200).json(response);
 });
 
 /*
