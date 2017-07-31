@@ -76,30 +76,39 @@ app.post("/api/charging-session", function(req, res) {
     console.log(req.body);
 
     // Check that all required fields have values
-    if (!req.body.maxChargeRates) {
+    if (!req.body.data) {
         handleError(res, "invalid input", "must provide max charge rates", 400);
     }
 
-    var columns = "(id";
-    var values = "('" + generateUniqueId() + "'";
-    for (var key in req.body) {
-        if (req.body.hasOwnProperty(key)) {
-            columns += ", " + key;
-            values += ", '" + req.body[key] + "'";
+    var maxChargeRates = req.body.data.split(",");
+    var response[8];
+    int i;
+    for (i = 0; i < data.length(); i++) {
+        console.log(maxChargeRates[i]);
+
+        if (maxChargeRates[i] != 0) {
+            client.query("SELECT * FROM chargingsession WHERE pinId = '" + i + "' AND active = true", (err, results) {
+                if (err) {
+                    handleError(res, err.message, "failed to get charging session");
+                }
+                if (results.rows.length === 0) {
+                    var columns = "(id, active, pinId, maxChargeRate)";
+                    var values = "('" + generateUniqueId() + "', true, " + i + ", " + maxChargeRates[i] + ")";
+
+                    client.query("INSERT INTO chargingsessions " + columns + " VALUES " + values + " RETURNING *", (err, results) => {
+                        if (err) {
+                            handleError(res, err.message, "failed to create new charging session");
+                        }
+                        if (results.rows.length === 0) {
+                            handleError(res, "charging session not created", "failed to create new charging session", 404);
+                        }
+                        response[i] = "https://ev-charging.herokuapp.com/" + results.rows[0].id;
+                    });
+                }
+            }
         }
     }
-    columns += ")";
-    values += ")";
-
-    client.query("INSERT INTO chargingsessions " + columns + " VALUES " + values + " RETURNING *", (err, results) => {
-        if (err) {
-            handleError(res, err.message, "failed to create new charging session");
-        }
-        if (results.rows.length === 0) {
-            handleError(res, "charging session not created", "failed to create new charging session", 404);
-        }
-        res.status(200).json({"url": "https://ev-charging.herokuapp.com/" + results.rows[0].id});
-    });
+    res.status(200).json({1: response[0], 2: response[1], 3: response[2], 4: response[3], 5: response[4], 6: response[5], 7: response[6], 8: response[7]});
 });
 
 /*
