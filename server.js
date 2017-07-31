@@ -73,10 +73,12 @@ app.post("/api/charging-session", function(req, res) {
         handleError(res, "authentication failed", "failed to create new charging session", 400);
     }
 
+    console.log(req.body);
+
     // Check that all required fields have values
-    //if (!req.body.???) {
-    //    handleError(res, "invalid input", "must provide ???", 400);
-    //}
+    if (!req.body.maxChargeRates) {
+        handleError(res, "invalid input", "must provide max charge rates", 400);
+    }
 
     var columns = "(id";
     var values = "('" + generateUniqueId() + "'";
@@ -196,6 +198,13 @@ function generateUniqueId() {
 
 function sendUpdateToChargers() {
     console.log("sending update to ev chargers");
+
+
+
+
+
+
+
 
     var request = require("request");
 
