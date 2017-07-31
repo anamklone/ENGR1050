@@ -80,9 +80,10 @@ app.post("/api/charging-session", function(req, res) {
         handleError(res, "invalid input", "must provide max charge rates", 400);
     }
 
-    var maxChargeRates = req.body.data.split(",");
+    var data = req.body.data;
+    var maxChargeRates = data.split(",");
     var response = [];
-    for (i = 0; i < data.length(); i++) {
+    for (i = 0; i < maxChargeRates.length(); i++) {
         console.log(maxChargeRates[i]);
 
         if (maxChargeRates[i] != 0) {
