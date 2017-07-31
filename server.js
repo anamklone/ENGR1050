@@ -86,7 +86,7 @@ app.post("/api/charging-session", function(req, res) {
         console.log(maxChargeRates[i]);
 
         if (maxChargeRates[i] != 0) {
-            client.query("SELECT * FROM chargingsession WHERE pinId = '" + i + "' AND active = true", (err, results) {
+            client.query("SELECT * FROM chargingsession WHERE pinId = '" + i + "' AND active = true", (err, results) => {
                 if (err) {
                     handleError(res, err.message, "failed to get charging session");
                 }
@@ -105,7 +105,7 @@ app.post("/api/charging-session", function(req, res) {
                         response.push("https://ev-charging.herokuapp.com/" + results.rows[0].id);
                     });
                 }
-            }
+            });
         }
     }
     //res.status(200).json({1: response[0], 2: response[1], 3: response[2], 4: response[3], 5: response[4], 6: response[5], 7: response[6], 8: response[7]});
