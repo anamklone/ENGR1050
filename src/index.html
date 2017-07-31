@@ -55,14 +55,9 @@
 <script>
     $("#submit").click(function() {
         var id = "1234";
-        var hours = $("input[name=hours]").val();
-        var minutes = $("input[name=minutes]").val();
-        console.log(hours);
-        console.log(minutes);
 
         $.ajax({
             type: "POST",
-            //url: "https://requestb.in/q01bmgq0",
             url: "https://ev-charging.herokuapp.com/api/charging-session/" + id,
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(
