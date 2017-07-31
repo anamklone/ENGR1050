@@ -60,8 +60,8 @@
         console.log(hours);
         console.log(minutes);
 
-        //$.post("https://ev-charging.herokuapp.com/api/charging-session/" + id,
-        $.post("https://requestb.in/q01bmgq0",
+        $.post("https://ev-charging.herokuapp.com/api/charging-session/" + id,
+        //$.post("https://requestb.in/q01bmgq0",
         JSON.stringify(
             {
                 estimatedTime: {
@@ -80,8 +80,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "https://requestb.in/q01bmgq0", true);
-        //xhr.open("POST", "https://ev-charging.herokuapp.com/api/charging-session/" + id, true);
+        //xhr.open("POST", "https://requestb.in/q01bmgq0", true);
+        xhr.open("POST", "https://ev-charging.herokuapp.com/api/charging-session/" + id, true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.onreadystatechange = function() {
             console.log(xhr.responseText);
@@ -104,7 +104,8 @@
 
         $.ajax({
             type: "POST",
-            url: "https://requestb.in/q01bmgq0",
+            //url: "https://requestb.in/q01bmgq0",
+            url: "https://ev-charging.herokuapp.com/api/charging-session/" + id,
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(
                 {
