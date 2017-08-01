@@ -150,7 +150,8 @@ app.post("/api/charging-session/:id", function(req, res) {
         dataToUpdate = dataToUpdate.substring(0, dataToUpdate.length - 2);
         */
 
-        var dataToUpdate = "active = true, estimatedTime.hours = '" + req.body.estimatedTime.hours + "', estimatedTime.minutes = '" + req.body.estimatedTime.minutes + "'";
+        var dataToUpdate = "active = true, estimatedTime.hours = '" + req.body.estimatedTime.hours + "', estimatedTime.minutes = '"
+            + req.body.estimatedTime.minutes + "', estimatedTime.seconds = '" + req.body.estimatedTime.seconds + "'";
 
         console.log("dataToUpdate = " + dataToUpdate);
 

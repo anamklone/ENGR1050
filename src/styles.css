@@ -22,15 +22,6 @@ h2 {
     margin: 25px;
 }
 
-h3 {
-	text-align: center;
-	background-color: darkgreen;
-	color: lawngreen;
-    border: 25px solid green;
-	padding: 25px;
-	margin: 25px;
-}
-
 label {
 	text-align: center;
 	background-color: darkgreen;
@@ -53,6 +44,15 @@ button {
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
+}
+
+.id {
+	text-align: center;
+	background-color: darkgreen;
+	color: lawngreen;
+    border: 25px solid green;
+	padding: 25px;
+	margin: 25px;
 }
 
 #status {
