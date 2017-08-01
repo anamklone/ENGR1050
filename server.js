@@ -54,17 +54,18 @@ app.get("/api/charging-session", function(req, res) {
     console.log("find all charging sessions");
     if (!req.get("Authorization") || !authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to get charging sessions", 400);
+    } else {
+        client.query("SELECT * FROM chargingsessions", (err, results) => {
+            if (err) {
+                handleError(res, err.message, "failed to get charging sessions");
+            }
+            if (results.rows.length === 0) {
+                handleError(res, "no charging sessions found", "failed to get charging sessions", 404);
+            } else {
+                res.status(200).json(results.rows);
+            }
+        });
     }
-    client.query("SELECT * FROM chargingsessions", (err, results) => {
-        if (err) {
-            handleError(res, err.message, "failed to get charging sessions");
-        }
-        if (results.rows.length === 0) {
-            handleError(res, "no charging sessions found", "failed to get charging sessions", 404);
-        } else {
-            res.status(200).json(results.rows);
-        }
-    });
 });
 
 app.post("/api/charging-session", function(req, res) {
@@ -72,36 +73,35 @@ app.post("/api/charging-session", function(req, res) {
 
     if (!req.get("Authorization") || !authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to create new charging session", 400);
-    }
+    } else {
 
-    console.log(req.body);
+        console.log(req.body);
 
-    var data = JSON.parse(req.body.data);
+        var data = JSON.parse(req.body.data);
 
-    // Check that all required fields have values
-    if (!data.pinId) {
-        handleError(res, "invalid input", "must provide pinId", 400);
-    }
-    if (!data.maxChargeRate) {
-        handleError(res, "invalid input", "must provide maxChargeRate", 400);
-    }
-
-    var columns = "(id, active, pinId, maxChargeRate)";
-    var values = "('" + generateUniqueId() + "', false, " + data.pinId + ", " + data.maxChargeRate + ")";
-
-    client.query("INSERT INTO chargingsessions " + columns + " VALUES " + values + " RETURNING *", (err, results) => {
-        if (err) {
-            handleError(res, err.message, "failed to create new charging session");
-        }
-
-        console.log(results);
-
-        if (results.rows.length === 0) {
-            handleError(res, "charging session not created", "failed to create new charging session", 404);
+        // Check that all required fields have values
+        if (!data.pinId) {
+            handleError(res, "invalid input", "must provide pinId", 400);
+        } else if (!data.maxChargeRate) {
+            handleError(res, "invalid input", "must provide maxChargeRate", 400);
         } else {
-            res.status(200).json(results.rows[0].pinId + ": https://ev-charging.herokuapp.com/" + results.rows[0].id);
+
+            var columns = "(id, active, pinId, maxChargeRate)";
+            var values = "('" + generateUniqueId() + "', false, " + data.pinId + ", " + data.maxChargeRate + ")";
+
+            client.query("INSERT INTO chargingsessions " + columns + " VALUES " + values + " RETURNING *", (err, results) => {
+                if (err) {
+                    handleError(res, err.message, "failed to create new charging session");
+                }
+
+                if (results.rows.length === 0) {
+                    handleError(res, "charging session not created", "failed to create new charging session", 404);
+                } else {
+                    res.status(200).json(results.rows[0].pinId + ": https://ev-charging.herokuapp.com/" + results.rows[0].id);
+                }
+            });
         }
-    });
+    }
 });
 
 /*
@@ -114,17 +114,18 @@ app.get("/api/charging-session/:id", function(req, res) {
     console.log("find charging session by id (id = " + req.params.id + ")");
     if (!req.get("Authorization") || !authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to get charging session (id = " + req.params.id + ")", 400);
+    } else {
+        client.query("SELECT * FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
+            if (err) {
+                handleError(res, err.message, "failed to get charging session (id = " + req.params.id + ")");
+            }
+            if (results.rows.length === 0) {
+                handleError(res, "charging session not found", "failed to get charging session (id = " + req.params.id + ")", 404);
+            } else {
+                res.status(200).json(results.rows);
+            }
+        });
     }
-    client.query("SELECT * FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
-        if (err) {
-            handleError(res, err.message, "failed to get charging session (id = " + req.params.id + ")");
-        }
-        if (results.rows.length === 0) {
-            handleError(res, "charging session not found", "failed to get charging session (id = " + req.params.id + ")", 404);
-        } else {
-            res.status(200).json(results.rows);
-        }
-    });
 });
 
 app.post("/api/charging-session/:id", function(req, res) {
@@ -133,60 +134,60 @@ app.post("/api/charging-session/:id", function(req, res) {
     /*
     if (!req.get("Authorization") || !authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to update charging session (id = " + req.params.id + ")", 400);
-    }
-    */
+    } else {*/
+        // Check that all required fields have values
+        //if (!req.body.???) {
+        //    handleError(res, "invalid input", "must provide ???", 400);
+        //}
 
-    // Check that all required fields have values
-    //if (!req.body.???) {
-    //    handleError(res, "invalid input", "must provide ???", 400);
+        /*
+        var dataToUpdate = "";
+        for (var key in req.body) {
+            console.log(key + " = " + req.body[key]);
+            if (req.body.hasOwnProperty(key)) {
+                dataToUpdate += key + " = '" + req.body[key] + "', ";
+            }
+        }
+        dataToUpdate = dataToUpdate.substring(0, dataToUpdate.length - 2);
+        */
+
+        var dataToUpdate = "active = true, estimatedTime.hours = '" + req.body.estimatedTime.hours + "', estimatedTime.minutes = '" + req.body.estimatedTime.minutes + "'";
+
+        console.log("dataToUpdate = " + dataToUpdate);
+
+        client.query("UPDATE chargingsessions SET " + dataToUpdate + " WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
+            if (err) {
+                handleError(res, err.message, "failed to update charging session (id = " + req.params.id + ")");
+            }
+
+            console.log("results = " + results);
+
+            if (results.rows.length === 0) {
+                handleError(res, "charging session not found", "failed to update charging session (id = " + req.params.id + ")", 404);
+            } else {
+                res.status(200).json(results.rows);
+                sendUpdateToChargers();
+            }
+        });
     //}
-
-    /*
-    var dataToUpdate = "";
-    for (var key in req.body) {
-        console.log(key + " = " + req.body[key]);
-        if (req.body.hasOwnProperty(key)) {
-            dataToUpdate += key + " = '" + req.body[key] + "', ";
-        }
-    }
-    dataToUpdate = dataToUpdate.substring(0, dataToUpdate.length - 2);
-    */
-
-    var dataToUpdate = "active = true, estimatedTime.hours = '" + req.body.estimatedTime.hours + "', estimatedTime.minutes = '" + req.body.estimatedTime.minutes + "'";
-
-    console.log("dataToUpdate = " + dataToUpdate);
-
-    client.query("UPDATE chargingsessions SET " + dataToUpdate + " WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
-        if (err) {
-            handleError(res, err.message, "failed to update charging session (id = " + req.params.id + ")");
-        }
-
-        console.log("results = " + results);
-
-        if (results.rows.length === 0) {
-            handleError(res, "charging session not found", "failed to update charging session (id = " + req.params.id + ")", 404);
-        } else {
-            res.status(200).json(results.rows);
-            sendUpdateToChargers();
-        }
-    });
 });
 
 app.delete("/api/charging-session/:id", function(req, res) {
     console.log("delete charging session by id");
     if (!req.get("Authorization") || !authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to delete charging session (id = " + req.params.id + ")", 400);
+    } else {
+        client.query("DELETE FROM chargingsessions WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
+            if (err) {
+                handleError(res, err.message, "failed to delete charging session (id = " + req.params.id + ")");
+            }
+            if (results.rows.length === 0) {
+                handleError(res, "charging session not found", "failed to delete charging session (id = " + req.params.id + ")", 404);
+            } else {
+                res.status(200).json(results.rows);
+            }
+        });
     }
-    client.query("DELETE FROM chargingsessions WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
-        if (err) {
-            handleError(res, err.message, "failed to delete charging session (id = " + req.params.id + ")");
-        }
-        if (results.rows.length === 0) {
-            handleError(res, "charging session not found", "failed to delete charging session (id = " + req.params.id + ")", 404);
-        } else {
-            res.status(200).json(results.rows);
-        }
-    });
 });
 
 function authenticate(key) {
