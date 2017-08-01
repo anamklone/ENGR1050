@@ -172,7 +172,7 @@ app.post("/api/charging-session/:id", function(req, res) {
                     handleError(res, "charging session not found", "failed to update charging session (id = " + req.params.id + ")", 404);
                 } else {
                     calculateOutputs();
-                    // ?????????????????????????????????????????????????????????????????????????????
+                    //results.rows
                     res.status(200).json({"additionalMiles":50, "endTime":"4:44 pm"});
                 }
             }
@@ -418,7 +418,7 @@ function sendUpdateToChargers() {
 
     // Configure the request
     var options = {
-        url: "https://requestb.in/10ecsll1", // "https://api.particle.io/v1/devices/230055001951353338363036/ev-update"
+        url: /*"https://requestb.in/10ecsll1", // */"https://api.particle.io/v1/devices/230055001951353338363036/ev-update"
         method: "POST",
         headers: headers,
         form: {"data": data}
