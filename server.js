@@ -243,11 +243,15 @@ function calculateOutputs() {
                         charging_session_data[0][i] = results.rows[i].maxchargerate;
                     }
 
-                    console.log(results.rows[i].estimatedtime.hours);
-                    console.log(results.rows[i].estimatedtime.minutes);
-                    console.log(results.rows[i].estimatedtime.seconds);
+                    console.log(results.rows[i].estimatedtime);
 
-                    charging_session_data[1][i] = (results.rows[i].estimatedtime.hours * 60) + results.rows[i].estimatedtime.minutes;
+                    var estimatedTime = results.rows[i].estimatedtime.replace("(", "").replace(")", "").split(",");
+
+                    console.log(estimatedTime[0]);
+                    console.log(estimatedTime[1]);
+                    console.log(estimatedTime[2]);
+
+                    charging_session_data[1][i] = (estimatedTime[0] * 60) + estimatedTime[1];
                 }
 
                 console.log("charging_session_data = " + charging_session_data);
@@ -263,6 +267,11 @@ function calculateOutputs() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+                var sum_charge_max_needs_tmp = sum_charge_max_needs;
+                var excess = 0;
+                var cars_with_t0 = 0;
+                var infra_disbursed = 0;
+
                 if (sum_charge_max_needs <= max_infra_cap) {
                     console.log("all cars may be charged at full charger capacity");
                     for (i = 0; i < max_num_cars; i++) {
@@ -273,9 +282,56 @@ function calculateOutputs() {
                         }
                     }
                 } else {
+                    for (i = 0; i < max_num_cars; i++) {
+                        if (charging_session_data[1][i] == 0 && charging_session_data[0][i] != 0) {
+                            sum_charge_max_needs_tmp -= charging_session_data[0][i];
+                            charge_outputs[i] = 999;
+                            // ??????????????????????????????????????????????????????
+                            //excess += sum_car_data[i];
+                            cars_with_t0 += 1;
+                        }
+                    }
+                }
 
-                    // ?????????????????????????????????????????????????????
+                if (sum_charge_max_needs_tmp <= max_infra_cap) {
+                    console.log("all cars with remaining time may be charged at full capacity");
+                    for (i = 0; i < max_num_cars; i++) {
+                        if (charging_session_data[0][i] != 0 && charging_session_data[1][i] != 0) {
+                            charge_outputs[i] = charging_session_data[0][i];
+                            infra_disbursed += charge_outputs[i];
+                        }
+                    }
 
+                    if (cars_with_t0 > 0) {
+                        var infra_remaining = max_infra_cap - infra_disbursed;
+                        var remaining_avg = infra_remaining / cars_with_t0;
+                        for (i = 0; i < max_num_cars; i++) {
+                            if (charge_outputs[i] == 999 && charging_session_data[0][i] <= remaining_avg) {
+                                charge_outputs[i] = charging_session_data[0][i];
+                                infra_remaining -= charge_outputs[i];
+                                if (cars_with_t0 != 1) {
+                                    cars_with_t0 -= 1;
+                                    remaining_avg = infra_remaining / (cars_with_t0 - (i + 1));
+                                }
+                            }
+                        }
+
+                        for (i = 0; i < max_num_cars; i++) {
+                            if (charge_outputs[i] == 999) {
+                                charge_outputs[i] = remaining_avg;
+                            }
+                        }
+                    }
+                } else if (sum_charge_max_needs_tmp > max_infra_cap) {
+                    var remaining_avail = max_infra_cap;
+                    var avg_avail = sum_charge_max_needs_tmp / max_num_cars;
+                    for (i = 0; i < max_num_cars; i++) {
+                        if (charging_session_data[0][i] <= avg_avail) {
+                            charge_outputs[i] = charging_session_data[0][i];
+                            remaining_avail -= charge_outputs[i];
+                            avg_avail = remaining_avail / (max_num_cars - (i + 1));
+                        }
+                    }
                 }
 
                 // ??????????????????????????????????????????????????????
@@ -290,7 +346,7 @@ function calculateOutputs() {
                     var difference = 0;
 
                     if (charge_outputs[i] !== 0) {
-                        for (j = 0; j < bin_rounded_final_output.length; j++) {
+                        for (j = 0; j < binary_charge_values[0].length; j++) {
                             difference = charge_outputs[i] - binary_charge_values[0][j];
                             if (difference < 0) {
                                 if (j != 0) {
