@@ -217,11 +217,11 @@ var charging_session_data = new Array(5);
 for (i = 0; i < charging_session_data.length; i++) {
     charging_session_data[i] = new Array(max_num_cars).fill(0);
 }
-console.log(charging_session_data);
+
+var bin_rounded_final_output = new Array(max_num_cars).fill(0);
 
 // Output array
 var charge_outputs = new Array(max_num_cars).fill(0);
-console.log(charge_outputs);
 
 function calculateOutputs() {
     console.log("calculate new output rates for all chargers");
@@ -235,10 +235,18 @@ function calculateOutputs() {
                 console.log(results.rows);
 
                 for (i = 0; i < results.rows.length; i++) {
-                    charging_session_data[0][i] = results.rows[i].maxChargeRate;
+                    if (results.rows[i].maxchargerate > charger_kW) {
+                        charging_session_data[0][i] = charger_kW;
+                        console.log("ev charger #" + i + " maxed out");
+                    } else {
+                        charging_session_data[0][i] = results.rows[i].maxchargerate;
+                    }
+                    charging_session_data[1][i] = (results.rows[i].estimatedtime.hours * 60) + results.rows[i].estimatedtime.minutes;
                 }
 
                 console.log(charging_session_data);
+
+
 
 
                 sendUpdateToChargers();
