@@ -95,7 +95,7 @@ app.post("/api/charging-session", function(req, res) {
                     if (results.rows.length === 0) {
                         handleError(res, "charging session not created", "failed to create new charging session", 404);
                     } else {
-                        res.status(200).json({results.rows[0].pinid: "https://ev-charging.herokuapp.com/" + results.rows[0].id});
+                        res.status(200).json({"pinId": results.rows[0].pinid, "url": "https://ev-charging.herokuapp.com/" + results.rows[0].id});
                     }
                 }
             });
