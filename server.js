@@ -87,13 +87,15 @@ app.post("/api/charging-session", function(req, res) {
         console.log(maxChargeRates[i]);
 
         if (maxChargeRates[i] != 0) {
+            console.log("maxChargeRate != 0");
+
             client.query("SELECT * FROM chargingsession WHERE pinId = '" + i + "' AND active = true", (err, results) => {
                 if (err) {
                     handleError(res, err.message, "failed to get charging session");
                 }
                 if (results.rows.length === 0) {
                     var columns = "(id, active, pinId, maxChargeRate)";
-                    var values = "('" + generateUniqueId() + "', true, " + i + ", " + maxChargeRates[i] + ")";
+                    var values = "('" + generateUniqueId() + "', false, " + i + ", " + maxChargeRates[i] + ")";
 
                     client.query("INSERT INTO chargingsessions " + columns + " VALUES " + values + " RETURNING *", (err, results) => {
                         if (err) {
@@ -160,7 +162,7 @@ app.post("/api/charging-session/:id", function(req, res) {
     dataToUpdate = dataToUpdate.substring(0, dataToUpdate.length - 2);
     */
 
-    var dataToUpdate = "estimatedTime.hours = '" + req.body.estimatedTime.hours + "', estimatedTime.minutes = '" + req.body.estimatedTime.minutes + "'";
+    var dataToUpdate = "active = true, estimatedTime.hours = '" + req.body.estimatedTime.hours + "', estimatedTime.minutes = '" + req.body.estimatedTime.minutes + "'";
 
     console.log("dataToUpdate = " + dataToUpdate);
 
@@ -207,17 +209,32 @@ function generateUniqueId() {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var binary_charge_values = [
+    [0, 3.3, 4.56, 5.82, 6.6, 7, 7.2, 8.34, 9.6],
+    [0, 50, 70, 90, 110, 130, 150, 170, 220]
+];
+
+// Find infrastructure max
+var max_infra_cap = 50;
+
+// Max charger capacity - 40 amps (most common)
+var max_charger_cap_amps = 40;
+
+// Max kW capacity of each charger
+var charger_kW = (max_charger_cap_amps * 240) / 1000;
+
+var max_num_cars = 8;
+
+var request = require("request");
+
+function calculateOutputs() {
+
+}
+
 function sendUpdateToChargers() {
     console.log("sending update to ev chargers");
-
-
-
-
-
-
-
-
-    var request = require("request");
 
     // Set the headers
     var headers = {
