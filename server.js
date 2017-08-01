@@ -91,7 +91,7 @@ app.post("/api/charging-session", function(req, res) {
                     handleError(res, err.message, "failed to create new charging session");
                 }
 
-                console.log(results);
+                console.log(results.rows);
 
                 if (results.rows.length === 0) {
                     handleError(res, "charging session not created", "failed to create new charging session", 404);
