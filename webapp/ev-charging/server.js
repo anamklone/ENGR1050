@@ -94,7 +94,8 @@ app.post("/api/charging-session", function(req, res) {
                     handleError(res, err.message, "failed to get charging session");
                 }
 
-                console.log("response = " + response);
+                console.log("i = " + i);
+                console.log("results = " + results);
 
                 if (results.rows.length === 0) {
                     var columns = "(id, active, pinId, maxChargeRate)";
@@ -104,6 +105,9 @@ app.post("/api/charging-session", function(req, res) {
                         if (err) {
                             handleError(res, err.message, "failed to create new charging session");
                         }
+
+                        console.log("results = " + results);
+
                         if (results.rows.length === 0) {
                             handleError(res, "charging session not created", "failed to create new charging session", 404);
                         }
