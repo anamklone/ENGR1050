@@ -49,6 +49,7 @@ function handleError(res, reason, message, code) {
  * "/api/charging-session"
  *   GET: find all charging sessions
  *   POST: create a new charging session
+ *   DELETE: delete all charging sessions
  */
 app.get("/api/charging-session", function(req, res) {
     console.log("find all charging sessions");
@@ -94,11 +95,30 @@ app.post("/api/charging-session", function(req, res) {
                     if (results.rows.length === 0) {
                         handleError(res, "charging session not created", "failed to create new charging session", 404);
                     } else {
-                        res.status(200).json(results.rows[0].pinid + ": https://ev-charging.herokuapp.com/" + results.rows[0].id);
+                        res.status(200).json({results.rows[0].pinid + ": https://ev-charging.herokuapp.com/" + results.rows[0].id});
                     }
                 }
             });
         }
+    }
+});
+
+app.delete("/api/charging-session", function(req, res) {
+    console.log("delete all charging sessions");
+    if (!req.get("Authorization") || !authenticate(req.get("Authorization").toString().slice(6))) {
+        handleError(res, "authentication failed", "failed to delete charging sessions", 400);
+    } else {
+        client.query("DELETE FROM chargingsessions", (err, results) => {
+            if (err) {
+                handleError(res, err.message, "failed to delete charging sessions");
+            } else {
+                if (results.rows.length === 0) {
+                    handleError(res, "no charging sessions deleted", "failed to delete charging sessions", 404);
+                } else {
+                    res.status(200).json(results.rows);
+                }
+            }
+        });
     }
 });
 
@@ -151,8 +171,9 @@ app.post("/api/charging-session/:id", function(req, res) {
                 if (results.rows.length === 0) {
                     handleError(res, "charging session not found", "failed to update charging session (id = " + req.params.id + ")", 404);
                 } else {
-                    res.status(200).json(results.rows);
                     calculateOutputs();
+                    // ?????????????????????????????????????????????????????????????????????????????
+                    res.status(200).json({"additionalMiles":50, "endTime":"4:44 pm"});
                 }
             }
         });
@@ -243,13 +264,7 @@ function calculateOutputs() {
                         charging_session_data[0][i] = results.rows[i].maxchargerate;
                     }
 
-                    console.log(results.rows[i].estimatedtime);
-
                     var estimatedTime = results.rows[i].estimatedtime.replace("(", "").replace(")", "").split(",");
-
-                    console.log(estimatedTime[0]);
-                    console.log(estimatedTime[1]);
-                    console.log(estimatedTime[2]);
 
                     charging_session_data[1][i] = (estimatedTime[0] * 60) + estimatedTime[1];
                 }
