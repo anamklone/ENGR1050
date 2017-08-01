@@ -84,8 +84,8 @@
             success: function(data) {
                 console.log(data);
 
-                $("#distance").html("23 miles");
-                $("#time").html("11:38 am");
+                $("#distance").html(data.additionalMiles + " miles");
+                $("#time").html(data.endTime);
 
                 $("#input").css("display", "none");
                 $("#status").css("display", "block");
