@@ -75,9 +75,12 @@ app.post("/api/charging-session", function(req, res) {
         handleError(res, "authentication failed", "failed to create new charging session", 400);
     } else {
 
-        console.log(req.body);
+        console.log(req.body.data);
 
         var data = JSON.parse(req.body.data);
+
+        console.log(data.pinId);
+        console.log(data.maxChargeRate);
 
         // Check that all required fields have values
         if (!data.pinId) {
