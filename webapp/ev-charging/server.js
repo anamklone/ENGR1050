@@ -197,7 +197,7 @@ var binary_charge_values = [
     [0, 50, 70, 90, 110, 130, 150, 170, 220]
 ];
 
-// Find infrastructure max
+// Find infrastructure max????????????????????????????
 var max_infra_cap = 50;
 
 // Max charger capacity - 40 amps (most common)
@@ -207,6 +207,8 @@ var max_charger_cap_amps = 40;
 var charger_kW = (max_charger_cap_amps * 240) / 1000;
 
 var max_num_cars = 8;
+
+var per_car_deliverable = max_infra_cap / max_num_cars;
 
 //row 1 = max charge rate the car can pull (or limited by charger)
 //row 2 = estimated time there in minutes
@@ -218,10 +220,9 @@ for (i = 0; i < charging_session_data.length; i++) {
     charging_session_data[i] = new Array(max_num_cars).fill(0);
 }
 
-var bin_rounded_final_output = new Array(max_num_cars).fill(0);
-
-// Output array
+// Output arrays
 var charge_outputs = new Array(max_num_cars).fill(0);
+var bin_rounded_final_output = new Array(max_num_cars).fill(0);
 
 function calculateOutputs() {
     console.log("calculate new output rates for all chargers");
@@ -241,13 +242,75 @@ function calculateOutputs() {
                     } else {
                         charging_session_data[0][i] = results.rows[i].maxchargerate;
                     }
+
+                    console.log(results.rows[i].estimatedtime.hours);
+                    console.log(results.rows[i].estimatedtime.minutes);
+                    console.log(results.rows[i].estimatedtime.seconds);
+
                     charging_session_data[1][i] = (results.rows[i].estimatedtime.hours * 60) + results.rows[i].estimatedtime.minutes;
                 }
 
-                console.log(charging_session_data);
+                console.log("charging_session_data = " + charging_session_data);
 
+                // Calculate max total needs of cars in kW
+                var sum_charge_max_needs = 0;
 
+                for (i = 0; i < max_num_cars; i++) {
+                    sum_charge_max_needs += charging_session_data[0][i];
+                }
 
+                console.log("sum_charge_max_needs = " + sum_charge_max_needs);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                if (sum_charge_max_needs <= max_infra_cap) {
+                    console.log("all cars may be charged at full charger capacity");
+                    for (i = 0; i < max_num_cars; i++) {
+                        if (charging_session_data[0][i] == 0) {
+                            charge_outputs[i] = 0;
+                        } else {
+                            charge_outputs[i] = charging_session_data[0][i];
+                        }
+                    }
+                } else {
+
+                    // ?????????????????????????????????????????????????????
+
+                }
+
+                // ??????????????????????????????????????????????????????
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                console.log("charge_outputs = " + charge_outputs);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                for (i = 0; i < max_num_cars; i++) {
+                    var difference = 0;
+
+                    if (charge_outputs[i] !== 0) {
+                        for (j = 0; j < bin_rounded_final_output.length; j++) {
+                            difference = charge_outputs[i] - binary_charge_values[0][j];
+                            if (difference < 0) {
+                                if (j != 0) {
+                                    bin_rounded_final_output[i] = binary_charge_values[1][j - 1];
+                                } else {
+                                    bin_rounded_final_output[i] = bin_rounded_final_output[1][j];
+                                }
+                                break;
+                            } else if (difference == 0) {
+                                bin_rounded_final_output[i] = binary_charge_values[1][j];
+                            }
+                        }
+                    } else {
+                        bin_rounded_final_output[i] = 0;
+                    }
+                }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                console.log("bin_rounded_final_output = " + bin_rounded_final_output);
 
                 sendUpdateToChargers();
             }
@@ -257,6 +320,14 @@ function calculateOutputs() {
 
 function sendUpdateToChargers() {
     console.log("sending update to ev chargers");
+
+    var data = "";
+    for (i = 0; i < max_num_cars; i++) {
+        data += bin_rounded_final_output[i];
+        if (i !== max_num_cars - 1) {
+            data += ",";
+        }
+    }
 
     var request = require("request");
 
@@ -268,10 +339,10 @@ function sendUpdateToChargers() {
 
     // Configure the request
     var options = {
-        url: "https://requestb.in/q01bmgq0", // "https://api.particle.io/v1/devices/230055001951353338363036/ev-update"
+        url: "https://requestb.in/10ecsll1", // "https://api.particle.io/v1/devices/230055001951353338363036/ev-update"
         method: "POST",
         headers: headers,
-        form: {"data": "0,0,0,0,0,0,0,0"}
+        form: {"data": data}
     }
 
     // Start the request
