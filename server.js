@@ -141,7 +141,7 @@ app.post("/api/charging-session/:id", function(req, res) {
 
         var dataToUpdate = "active = true, estimatedTime.hours = '" + req.body.estimatedTime.hours + "', estimatedTime.minutes = '"
             + req.body.estimatedTime.minutes + "', estimatedTime.seconds = '" + req.body.estimatedTime.seconds + "', startTime = '"
-            + d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":"
+            + d.getYear() + "-" + d.getMonth() + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":"
             + d.getSeconds() + "-" + d.getTimezoneOffset() + "'";
 
         console.log("dataToUpdate = " + dataToUpdate);
