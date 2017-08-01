@@ -418,7 +418,7 @@ function sendUpdateToChargers() {
 
     // Configure the request
     var options = {
-        url: /*"https://requestb.in/10ecsll1", // */"https://api.particle.io/v1/devices/230055001951353338363036/ev-update"
+        url: /*"https://requestb.in/10ecsll1", // */"https://api.particle.io/v1/devices/230055001951353338363036/ev-update",
         method: "POST",
         headers: headers,
         form: {"data": data}
