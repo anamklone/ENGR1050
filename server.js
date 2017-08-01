@@ -222,7 +222,7 @@ function calculateOutputs() {
     ];
 
     // Find infrastructure max
-    var max_infra_cap = 30;
+    var max_infra_cap = 50;
 
     // Max charger capacity - 40 amps (most common)
     var max_charger_cap_amps = 40;
