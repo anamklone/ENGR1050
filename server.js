@@ -93,6 +93,9 @@ app.post("/api/charging-session", function(req, res) {
                 if (err) {
                     handleError(res, err.message, "failed to get charging session");
                 }
+
+                console.log("response = " + response);
+
                 if (results.rows.length === 0) {
                     var columns = "(id, active, pinId, maxChargeRate)";
                     var values = "('" + generateUniqueId() + "', false, " + i + ", " + maxChargeRates[i] + ")";
