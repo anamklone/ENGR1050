@@ -144,8 +144,6 @@ app.post("/api/charging-session/:id", function(req, res) {
         var dataToUpdate = "active = true, estimatedTime.hours = '" + req.body.estimatedTime.hours + "', estimatedTime.minutes = '"
             + req.body.estimatedTime.minutes + "', estimatedTime.seconds = '" + req.body.estimatedTime.seconds + "', startTime = current_timestamp";
 
-        console.log("dataToUpdate = " + dataToUpdate);
-
         client.query("UPDATE chargingsessions SET " + dataToUpdate + " WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
             if (err) {
                 handleError(res, err.message, "failed to update charging session (id = " + req.params.id + ")");
@@ -210,7 +208,23 @@ var charger_kW = (max_charger_cap_amps * 240) / 1000;
 
 var max_num_cars = 8;
 
+//row 1 = max charge rate the car can pull (or limited by charger)
+//row 2 = estimated time there in minutes
+//row 3 = miles of charge to be delivered
+//row 4 = running time left to be there
+//row 5 = energy actually delivered in kWs
+var charging_session_data = new Array(5);
+for (i = 0; i < charging_session_data.length; i++) {
+    charging_session_data[i] = new Array(max_num_cars).fill(0);
+}
+console.log(charging_session_data);
+
+// Output array
+var charge_outputs = new Array(max_num_cars).fill(0);
+console.log(charge_outputs);
+
 function calculateOutputs() {
+    console.log("calculate new output rates for all chargers");
     client.query("SELECT * FROM chargingsessions WHERE active = true", (err, results) => {
         if (err) {
             console.log("no active charging sessions found");
@@ -220,6 +234,11 @@ function calculateOutputs() {
             } else {
                 console.log(results.rows);
 
+                for (i = 0; i < results.rows.length; i++) {
+                    charging_session_data[0][i] = results.rows[i].maxChargeRate;
+                }
+
+                console.log(charging_session_data);
 
 
                 sendUpdateToChargers();
