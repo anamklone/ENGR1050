@@ -82,13 +82,12 @@ app.post("/api/charging-session", function(req, res) {
 
     var data = req.body.data;
     var maxChargeRates = data.split(",");
-    var response = [];
+    var columns = [];
+    var values = [];
     for (i = 0; i < maxChargeRates.length; i++) {
         console.log(maxChargeRates[i]);
 
         if (maxChargeRates[i] != 0) {
-            console.log("maxChargeRate != 0");
-
             client.query("SELECT * FROM chargingsessions WHERE pinId = '" + i + "' AND active = true", (err, results) => {
                 if (err) {
                     handleError(res, err.message, "failed to get charging session");
@@ -98,26 +97,33 @@ app.post("/api/charging-session", function(req, res) {
                 console.log("results = " + results);
 
                 if (results.rows.length === 0) {
-                    var columns = "(id, active, pinId, maxChargeRate)";
-                    var values = "('" + generateUniqueId() + "', false, " + i + ", " + maxChargeRates[i] + ")";
-
-                    client.query("INSERT INTO chargingsessions " + columns + " VALUES " + values + " RETURNING *", (err, results) => {
-                        if (err) {
-                            handleError(res, err.message, "failed to create new charging session");
-                        }
-
-                        console.log("results = " + results);
-
-                        if (results.rows.length === 0) {
-                            handleError(res, "charging session not created", "failed to create new charging session", 404);
-                        }
-                        //response[i] = "https://ev-charging.herokuapp.com/" + results.rows[0].id;
-                        response.push("https://ev-charging.herokuapp.com/" + results.rows[0].id);
-                    });
+                    columns.push("(id, active, pinId, maxChargeRate)");
+                    values.push("('" + generateUniqueId() + "', false, " + i + ", " + maxChargeRates[i] + ")");
                 }
             });
         }
     }
+
+    console.log(columns);
+    console.log(values);
+
+    var response = [];
+    /*
+    client.query("INSERT INTO chargingsessions " + columns + " VALUES " + values + " RETURNING *", (err, results) => {
+        if (err) {
+            handleError(res, err.message, "failed to create new charging session");
+        }
+
+        console.log("results = " + results);
+
+        if (results.rows.length === 0) {
+            handleError(res, "charging session not created", "failed to create new charging session", 404);
+        }
+        //response[i] = "https://ev-charging.herokuapp.com/" + results.rows[0].id;
+        response.push("https://ev-charging.herokuapp.com/" + results.rows[0].id);
+    });
+    */
+
     //res.status(200).json({1: response[0], 2: response[1], 3: response[2], 4: response[3], 5: response[4], 6: response[5], 7: response[6], 8: response[7]});
     res.status(200).json(response);
 });
