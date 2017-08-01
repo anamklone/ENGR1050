@@ -14,6 +14,11 @@
 <body>
 
 <div id="input">
+    <div>
+        <h3>Enter the ID for your charging session:</h3>
+        <input type="text" name="id">
+    </div>
+
     <h1>How long would you like to charge?</h1>
 
     <br>
@@ -28,6 +33,9 @@
         <input type="number" name="minutes" min="0" max="59">
         <label>min</label>
 
+        <input type="number" name="seconds" min="0" max="59">
+        <label>sec</label>
+
         <br>
         <br>
         <br>
@@ -39,22 +47,25 @@
 </div>
 
 <div id="status">
-    <h1>Your car has received</h1>
+    <h1>Your car will receive</h1>
 
     <br>
     <br>
 
     <div>
-         <label>23 miles</label>
+         <label id="distance"></label>
          <h1> additionally at </h1>
-         <label>11:38 am</label>
+         <label id="time"></label>
     </div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
     $("#submit").click(function() {
-        var id = "1234";
+        var id = $("input[name=id]").val();
+        var h = $("input[name=hours]").val();
+        var m = $("input[name=minutes]").val();
+        var s = $("input[name=seconds]").val();
 
         $.ajax({
             type: "POST",
@@ -63,13 +74,17 @@
             data: JSON.stringify(
                 {
                     estimatedTime: {
-                        hours: $("input[name=hours]").val(),
-                        minutes: $("input[name=minutes]").val()
+                        hours: h,
+                        minutes: m,
+                        seconds: s
                     }
                 }
             ),
             success: function(data) {
                 console.log(data);
+
+                $("#distance").html("23 miles");
+                $("#time").html("11:38 am");
 
                 $("#input").css("display", "none");
                 $("#status").css("display", "block");
