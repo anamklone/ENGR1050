@@ -89,7 +89,7 @@ app.post("/api/charging-session", function(req, res) {
         if (maxChargeRates[i] != 0) {
             console.log("maxChargeRate != 0");
 
-            client.query("SELECT * FROM chargingsession WHERE pinId = '" + i + "' AND active = true", (err, results) => {
+            client.query("SELECT * FROM chargingsessions WHERE pinId = '" + i + "' AND active = true", (err, results) => {
                 if (err) {
                     handleError(res, err.message, "failed to get charging session");
                 }
