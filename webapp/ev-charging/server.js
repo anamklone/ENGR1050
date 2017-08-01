@@ -258,15 +258,15 @@ function calculateOutputs() {
 
                 for (i = 0; i < results.rows.length; i++) {
                     if (results.rows[i].maxchargerate > charger_kW) {
-                        charging_session_data[0][i] = charger_kW;
-                        console.log("ev charger #" + i + " maxed out");
+                        charging_session_data[0][results.rows[i].pinid] = charger_kW;
+                        console.log("ev charger #" + results.rows[i].pinid + " maxed out");
                     } else {
-                        charging_session_data[0][i] = results.rows[i].maxchargerate;
+                        charging_session_data[0][results.rows[i].pinid] = results.rows[i].maxchargerate;
                     }
 
                     var estimatedTime = results.rows[i].estimatedtime.replace("(", "").replace(")", "").split(",");
 
-                    charging_session_data[1][i] = (estimatedTime[0] * 60 * 60) + (estimatedTime[1] * 60) + estimatedTime[2];
+                    charging_session_data[1][results.rows[i].pinid] = (estimatedTime[0] * 60 * 60) + (estimatedTime[1] * 60) + estimatedTime[2];
                 }
 
                 console.log("charging_session_data = " + charging_session_data);
