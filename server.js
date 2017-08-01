@@ -52,7 +52,7 @@ function handleError(res, reason, message, code) {
  */
 app.get("/api/charging-session", function(req, res) {
     console.log("find all charging sessions");
-    if (!authenticate(req.get("Authorization").toString().slice(6))) {
+    if (!req.get("Authorization") || !authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to get charging sessions", 400);
     }
     client.query("SELECT * FROM chargingsessions", (err, results) => {
@@ -61,15 +61,16 @@ app.get("/api/charging-session", function(req, res) {
         }
         if (results.rows.length === 0) {
             handleError(res, "no charging sessions found", "failed to get charging sessions", 404);
+        } else {
+            res.status(200).json(results.rows);
         }
-        res.status(200).json(results.rows);
     });
 });
 
 app.post("/api/charging-session", function(req, res) {
     console.log("create new charging session");
 
-    if (!authenticate(req.get("Authorization").toString().slice(6))) {
+    if (!req.get("Authorization") || !authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to create new charging session", 400);
     }
 
@@ -97,8 +98,9 @@ app.post("/api/charging-session", function(req, res) {
 
         if (results.rows.length === 0) {
             handleError(res, "charging session not created", "failed to create new charging session", 404);
+        } else {
+            res.status(200).json(results.rows[0].pinId + ": https://ev-charging.herokuapp.com/" + results.rows[0].id);
         }
-        res.status(200).json(results.rows[0].pinId + ": https://ev-charging.herokuapp.com/" + results.rows[0].id);
     });
 });
 
@@ -110,7 +112,7 @@ app.post("/api/charging-session", function(req, res) {
  */
 app.get("/api/charging-session/:id", function(req, res) {
     console.log("find charging session by id (id = " + req.params.id + ")");
-    if (!authenticate(req.get("Authorization").toString().slice(6))) {
+    if (!req.get("Authorization") || !authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to get charging session (id = " + req.params.id + ")", 400);
     }
     client.query("SELECT * FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
@@ -119,8 +121,9 @@ app.get("/api/charging-session/:id", function(req, res) {
         }
         if (results.rows.length === 0) {
             handleError(res, "charging session not found", "failed to get charging session (id = " + req.params.id + ")", 404);
+        } else {
+            res.status(200).json(results.rows);
         }
-        res.status(200).json(results.rows);
     });
 });
 
@@ -128,7 +131,7 @@ app.post("/api/charging-session/:id", function(req, res) {
     console.log("update charging session by id (id = " + req.params.id + ")");
 
     /*
-    if (!authenticate(req.get("Authorization").toString().slice(6))) {
+    if (!req.get("Authorization") || !authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to update charging session (id = " + req.params.id + ")", 400);
     }
     */
@@ -162,15 +165,16 @@ app.post("/api/charging-session/:id", function(req, res) {
 
         if (results.rows.length === 0) {
             handleError(res, "charging session not found", "failed to update charging session (id = " + req.params.id + ")", 404);
+        } else {
+            res.status(200).json(results.rows);
+            sendUpdateToChargers();
         }
-        res.status(200).json(results.rows);
-        sendUpdateToChargers();
     });
 });
 
 app.delete("/api/charging-session/:id", function(req, res) {
     console.log("delete charging session by id");
-    if (!authenticate(req.get("Authorization").toString().slice(6))) {
+    if (!req.get("Authorization") || !authenticate(req.get("Authorization").toString().slice(6))) {
         handleError(res, "authentication failed", "failed to delete charging session (id = " + req.params.id + ")", 400);
     }
     client.query("DELETE FROM chargingsessions WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
@@ -179,8 +183,9 @@ app.delete("/api/charging-session/:id", function(req, res) {
         }
         if (results.rows.length === 0) {
             handleError(res, "charging session not found", "failed to delete charging session (id = " + req.params.id + ")", 404);
+        } else {
+            res.status(200).json(results.rows);
         }
-        res.status(200).json(results.rows);
     });
 });
 
