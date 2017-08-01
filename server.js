@@ -213,40 +213,42 @@ function generateUniqueId() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-var binary_charge_values = [
-    [0, 3.3, 4.56, 5.82, 6.6, 7, 7.2, 8.34, 9.6],
-    [0, 50, 70, 90, 110, 130, 150, 170, 220]
-];
-
-// Find infrastructure max
-var max_infra_cap = 50;
-
-// Max charger capacity - 40 amps (most common)
-var max_charger_cap_amps = 40;
-
-// Max kW capacity of each charger
-var charger_kW = (max_charger_cap_amps * 240) / 1000;
-
-var max_num_cars = 8;
-
-var per_car_deliverable = max_infra_cap / max_num_cars;
-
-//row 1 = max charge rate the car can pull (or limited by charger)
-//row 2 = estimated time there in seconds
-//row 3 = miles of charge to be delivered
-//row 4 = running time left to be there
-//row 5 = energy actually delivered in kWs
-var charging_session_data = new Array(5);
-for (i = 0; i < charging_session_data.length; i++) {
-    charging_session_data[i] = new Array(max_num_cars).fill(0);
-}
-
-// Output arrays
-var charge_outputs = new Array(max_num_cars).fill(0);
-var bin_rounded_final_output = new Array(max_num_cars).fill(0);
-
 function calculateOutputs() {
     console.log("calculate new output rates for all chargers");
+
+
+    var binary_charge_values = [
+        [0, 3.3, 4.56, 5.82, 6.6, 7, 7.2, 8.34, 9.6],
+        [0, 50, 70, 90, 110, 130, 150, 170, 220]
+    ];
+
+    // Find infrastructure max
+    var max_infra_cap = 50;
+
+    // Max charger capacity - 40 amps (most common)
+    var max_charger_cap_amps = 40;
+
+    // Max kW capacity of each charger
+    var charger_kW = (max_charger_cap_amps * 240) / 1000;
+
+    var max_num_cars = 8;
+
+    var per_car_deliverable = max_infra_cap / max_num_cars;
+
+    //row 1 = max charge rate the car can pull (or limited by charger)
+    //row 2 = estimated time there in seconds
+    //row 3 = miles of charge to be delivered
+    //row 4 = running time left to be there
+    //row 5 = energy actually delivered in kWs
+    var charging_session_data = new Array(5);
+    for (i = 0; i < charging_session_data.length; i++) {
+        charging_session_data[i] = new Array(max_num_cars).fill(0);
+    }
+
+    // Output arrays
+    var charge_outputs = new Array(max_num_cars).fill(0);
+    var bin_rounded_final_output = new Array(max_num_cars).fill(0);
+
     client.query("SELECT * FROM chargingsessions WHERE active = true", (err, results) => {
         if (err) {
             console.log("no active charging sessions found");
@@ -391,13 +393,13 @@ function calculateOutputs() {
 
                 console.log("bin_rounded_final_output = " + bin_rounded_final_output);
 
-                sendUpdateToChargers();
+                sendUpdateToChargers(max_num_cars, bin_rounded_final_output);
             }
         }
     });
 }
 
-function sendUpdateToChargers() {
+function sendUpdateToChargers(max_num_cars, bin_rounded_final_output) {
     console.log("sending update to ev chargers");
 
     var data = "";
