@@ -73,8 +73,6 @@ app.post("/api/charging-session", function(req, res) {
         handleError(res, "authentication failed", "failed to create new charging session", 400);
     }
 
-    console.log(req.body);
-
     // Check that all required fields have values
     if (!req.body.data) {
         handleError(res, "invalid input", "must provide max charge rates", 400);
@@ -97,8 +95,11 @@ app.post("/api/charging-session", function(req, res) {
                 console.log(results);
 
                 if (results.rows.length === 0) {
-                    var columns = "(id, active, pinId, maxChargeRate)";
-                    var values = "('" + generateUniqueId() + "', false, " + i + ", " + maxChargeRates[i] + ")";
+                    //var columns = "(id, active, pinId, maxChargeRate)";
+                    //var values = "('" + generateUniqueId() + "', false, " + i + ", " + maxChargeRates[i] + ")";
+
+                    var columns = "(id, active)";
+                    var values = "('" + generateUniqueId() + "', false)";
 
                     client.query("INSERT INTO chargingsessions " + columns + " VALUES " + values + " RETURNING *", (err, results) => {
                         if (err) {
