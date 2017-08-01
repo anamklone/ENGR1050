@@ -58,11 +58,12 @@ app.get("/api/charging-session", function(req, res) {
         client.query("SELECT * FROM chargingsessions", (err, results) => {
             if (err) {
                 handleError(res, err.message, "failed to get charging sessions");
-            }
-            if (results.rows.length === 0) {
-                handleError(res, "no charging sessions found", "failed to get charging sessions", 404);
             } else {
-                res.status(200).json(results.rows);
+                if (results.rows.length === 0) {
+                    handleError(res, "no charging sessions found", "failed to get charging sessions", 404);
+                } else {
+                    res.status(200).json(results.rows);
+                }
             }
         });
     }
@@ -89,12 +90,12 @@ app.post("/api/charging-session", function(req, res) {
             client.query("INSERT INTO chargingsessions " + columns + " VALUES " + values + " RETURNING *", (err, results) => {
                 if (err) {
                     handleError(res, err.message, "failed to create new charging session");
-                }
-
-                if (results.rows.length === 0) {
-                    handleError(res, "charging session not created", "failed to create new charging session", 404);
                 } else {
-                    res.status(200).json(results.rows[0].pinid + ": https://ev-charging.herokuapp.com/" + results.rows[0].id);
+                    if (results.rows.length === 0) {
+                        handleError(res, "charging session not created", "failed to create new charging session", 404);
+                    } else {
+                        res.status(200).json(results.rows[0].pinid + ": https://ev-charging.herokuapp.com/" + results.rows[0].id);
+                    }
                 }
             });
         }
@@ -115,11 +116,12 @@ app.get("/api/charging-session/:id", function(req, res) {
         client.query("SELECT * FROM chargingsessions WHERE id = '" + req.params.id + "'", (err, results) => {
             if (err) {
                 handleError(res, err.message, "failed to get charging session (id = " + req.params.id + ")");
-            }
-            if (results.rows.length === 0) {
-                handleError(res, "charging session not found", "failed to get charging session (id = " + req.params.id + ")", 404);
             } else {
-                res.status(200).json(results.rows);
+                if (results.rows.length === 0) {
+                    handleError(res, "charging session not found", "failed to get charging session (id = " + req.params.id + ")", 404);
+                } else {
+                    res.status(200).json(results.rows);
+                }
             }
         });
     }
@@ -147,15 +149,13 @@ app.post("/api/charging-session/:id", function(req, res) {
         client.query("UPDATE chargingsessions SET " + dataToUpdate + " WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
             if (err) {
                 handleError(res, err.message, "failed to update charging session (id = " + req.params.id + ")");
-            }
-
-            console.log("results = " + results);
-
-            if (results.rows.length === 0) {
-                handleError(res, "charging session not found", "failed to update charging session (id = " + req.params.id + ")", 404);
             } else {
-                res.status(200).json(results.rows);
-                sendUpdateToChargers();
+                if (results.rows.length === 0) {
+                    handleError(res, "charging session not found", "failed to update charging session (id = " + req.params.id + ")", 404);
+                } else {
+                    res.status(200).json(results.rows);
+                    calculateOutputs();
+                }
             }
         });
     //}
@@ -169,11 +169,12 @@ app.delete("/api/charging-session/:id", function(req, res) {
         client.query("DELETE FROM chargingsessions WHERE id = '" + req.params.id + "' RETURNING *", (err, results) => {
             if (err) {
                 handleError(res, err.message, "failed to delete charging session (id = " + req.params.id + ")");
-            }
-            if (results.rows.length === 0) {
-                handleError(res, "charging session not found", "failed to delete charging session (id = " + req.params.id + ")", 404);
             } else {
-                res.status(200).json(results.rows);
+                if (results.rows.length === 0) {
+                    handleError(res, "charging session not found", "failed to delete charging session (id = " + req.params.id + ")", 404);
+                } else {
+                    res.status(200).json(results.rows);
+                }
             }
         });
     }
@@ -209,14 +210,28 @@ var charger_kW = (max_charger_cap_amps * 240) / 1000;
 
 var max_num_cars = 8;
 
-var request = require("request");
-
 function calculateOutputs() {
+    client.query("SELECT * FROM chargingsessions WHERE active = true", (err, results) => {
+        if (err) {
+            console.log("no active charging sessions found");
+        } else {
+            if (results.rows.length === 0) {
+                console.log("no active charging sessions found");
+            } else {
+                console.log(results.rows);
 
+
+
+                sendUpdateToChargers();
+            }
+        }
+    });
 }
 
 function sendUpdateToChargers() {
     console.log("sending update to ev chargers");
+
+    var request = require("request");
 
     // Set the headers
     var headers = {
