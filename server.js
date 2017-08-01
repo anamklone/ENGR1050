@@ -216,14 +216,13 @@ function generateUniqueId() {
 function calculateOutputs() {
     console.log("calculate new output rates for all chargers");
 
-
     var binary_charge_values = [
         [0, 3.3, 4.56, 5.82, 6.6, 7, 7.2, 8.34, 9.6],
         [0, 50, 70, 90, 110, 130, 150, 170, 220]
     ];
 
     // Find infrastructure max
-    var max_infra_cap = 50;
+    var max_infra_cap = 30;
 
     // Max charger capacity - 40 amps (most common)
     var max_charger_cap_amps = 40;
