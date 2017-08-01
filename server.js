@@ -83,9 +83,9 @@ app.post("/api/charging-session", function(req, res) {
         console.log(data.maxChargeRate);
 
         // Check that all required fields have values
-        if ("undefined" === data.pinId) {
+        if ("undefined" === typeof data.pinId) {
             handleError(res, "invalid input", "must provide pinId", 400);
-        } else if ("undefined" === data.maxChargeRate) {
+        } else if ("undefined" === typeof data.maxChargeRate) {
             handleError(res, "invalid input", "must provide maxChargeRate", 400);
         } else {
 
