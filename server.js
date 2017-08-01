@@ -91,8 +91,6 @@ app.post("/api/charging-session", function(req, res) {
                     handleError(res, err.message, "failed to create new charging session");
                 }
 
-                console.log(results.rows);
-
                 if (results.rows.length === 0) {
                     handleError(res, "charging session not created", "failed to create new charging session", 404);
                 } else {
@@ -139,19 +137,9 @@ app.post("/api/charging-session/:id", function(req, res) {
         //    handleError(res, "invalid input", "must provide ???", 400);
         //}
 
-        /*
-        var dataToUpdate = "";
-        for (var key in req.body) {
-            console.log(key + " = " + req.body[key]);
-            if (req.body.hasOwnProperty(key)) {
-                dataToUpdate += key + " = '" + req.body[key] + "', ";
-            }
-        }
-        dataToUpdate = dataToUpdate.substring(0, dataToUpdate.length - 2);
-        */
-
         var dataToUpdate = "active = true, estimatedTime.hours = '" + req.body.estimatedTime.hours + "', estimatedTime.minutes = '"
-            + req.body.estimatedTime.minutes + "', estimatedTime.seconds = '" + req.body.estimatedTime.seconds + "'";
+            + req.body.estimatedTime.minutes + "', estimatedTime.seconds = '" + req.body.estimatedTime.seconds + "', startTime = '"
+            + Date() + "'";
 
         console.log("dataToUpdate = " + dataToUpdate);
 

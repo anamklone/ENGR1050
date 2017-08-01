@@ -47,12 +47,17 @@ button {
 }
 
 .id {
+    display: inline-block;
 	text-align: center;
 	background-color: darkgreen;
 	color: lawngreen;
     border: 25px solid green;
 	padding: 25px;
 	margin: 25px;
+}
+
+.id > input {
+    color: black;
 }
 
 #status {
