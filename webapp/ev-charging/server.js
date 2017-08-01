@@ -104,8 +104,8 @@ app.post("/api/charging-session", function(req, res) {
         }
     }
 
-    console.log(columns);
-    console.log(values);
+    console.log(columns.toString());
+    console.log(values.toString());
 
     var response = [];
     /*
