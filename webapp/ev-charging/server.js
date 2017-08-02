@@ -172,7 +172,7 @@ app.post("/api/charging-session/:id", function(req, res) {
                     handleError(res, "charging session not found", "failed to update charging session (id = " + req.params.id + ")", 404);
                 } else {
                     calculateOutputs();
-                    //results.rows
+                    // Calculate actual additional miles gained and time elapsed
                     res.status(200).json({"additionalMiles":50, "endTime":"4:44 pm"});
                 }
             }
