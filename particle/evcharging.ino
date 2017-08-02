@@ -5,6 +5,7 @@
 int button = D6;
 char PIN[8] = {B3, B2, B1, B0, D3, D2, D1, D0};
 int carRead[8];
+double previousCharge[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 double channelMaxCharge[8];
 int channelSupplyCharge[8];
 
@@ -77,29 +78,41 @@ void loop() {
         }
     }
     
+    for (i = 0; i < 8; i++) {
+        if (channelMaxCharge[i] == 0) {
+            analogWrite(PIN[i], 0);
+        }
+    }
+    
     // Print out the measured rates for debugging purposes
+    /*
     for (i = 0; i < 8; i++) {
         Serial.println(channelMaxCharge[i]);
     }
+    */
     
     // At this point, the max rate of charge for each car has been measured
     // 0 means that there isn't a car connected
     // If the button is not pressed, it will loop
     
-    if (button == LOW) {    // if the button is pressed
+    if (digitalRead(D6) == LOW) {    // if the button is pressed
         // Send request to create a new charging session
         // Pass the data from channelMaxCharge[]
-        String temp = "";
+        
+        Serial.println("button press");
+        
+        digitalWrite(D7, HIGH);
+        
         for (i = 0; i < 8; i++) {
-            String num = String(channelMaxCharge[i]);
-            temp.concat(num);
-            if (i != 7) {
-                temp.concat(",");
+            if ((previousCharge[i] == 0 && channelMaxCharge[i] != 0) || (previousCharge[i] != 0 && channelMaxCharge[i] == 0)) {
+                String data = String("{\"pinId\": " + String(i) + ", \"maxChargeRate\": " + String(channelMaxCharge[i]) + "}");
+                newSession(data);
+                previousCharge[i] = channelMaxCharge[i];
             }
         }
-        newSession(temp);
         
-        delay(250);     // 250ms delay
+        delay(1000);    // 1s delay
+        digitalWrite(D7, LOW);
     }
     
     delay(0.5); // 500us delay
@@ -108,6 +121,7 @@ void loop() {
 int newSession(String data) {
     // Trigger the new charging session 
     Serial.println("creating a new charging session");
+    Serial.println(data);
     Particle.publish("new_session", data, PRIVATE);
     return 1;
 }
